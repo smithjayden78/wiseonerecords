@@ -6,6 +6,7 @@ const durationLabel = document.getElementById('duration')
 const progressBar = document.getElementById('progress-bar')
 
 const playlist = [
+    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4" },
     { title: "Luv 66", file: "Bangers/Luv 66.mp4"},
     { title: "Never Leave Ya", file: "Bangers/Never leave ya.mp4" }, 
     { title: "Gypsy vocals", file: "Bangers/Gypsy vocals.mp4" }, 
@@ -16,8 +17,7 @@ const playlist = [
     { title: "Greater Love", file: "Bangers/greater love.mp4" }, 
     { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" }, 
     //{ title: "Jamka", file: "Bangers/Jamka.mp4" }, 
-    //{ title: "Never Leave Ya", file: "Bangers/Never leave ya.m4a.mp4" }, 
-    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4" }, 
+    //{ title: "Never Leave Ya", file: "Bangers/Never leave ya.m4a.mp4" },  
     { title: "SpaceJam", file: "Bangers/SpaceJam.mp4" }, 
     //{ title: "Washa", file: "Bangers/Washa.mp4" }, 
     { title: "Wont Stop", file: "Bangers/Wont Stop.mp4" }, 
@@ -103,4 +103,5 @@ audioPlayer.addEventListener('timeupdate', () => {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         progressBar.style.width = percent + "%";
     }
+    // Inside your existing timeupdate listener
 });

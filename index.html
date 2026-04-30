@@ -5,32 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Wise Ones Records</title>
-    <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .player-container { background: #1e1e1e; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        #track-title { margin-bottom: 1rem; font-size: 1.2rem; color: #bb86fc; }
-        audio { width: 100%; margin-top: 10px; }
-    </style>
 </head>
 
-</div>
 <body>
-<div class="player-container">
-    <div id="track-title">Ready to Mix</div>
-    <!-- Hidden until start is clicked -->
-    <audio id="audio-player">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="start-btn" style="padding: 10px 20px; cursor: pointer;">Start Live Mix</button>
-    <div class="progress-container">
-        <span id="current-time">0:00</span>
-        <div class="waveform-bg">
-            <div id="progress-bar"></div>
+    <!-- 2. Player Interface -->
+    <div class="player-container">
+        <div id="track-title">Ready to Mix</div>
+        
+        <audio id="audio-player">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <button id="start-btn" style="padding: 10px 20px; cursor: pointer;">WELCOME TO THE PARTY</button>
+        
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <div class="waveform-bg">
+                <div id="progress-bar"></div>
+            </div>
+            <span id="duration">0:00</span>
         </div>
-        <span id="duration">0:00</span>
     </div>
-</div>
-<script src="songController.js"></script>
+    <!-- 1. Load External Libraries First -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- 3. Load Your Custom Scripts Last -->
+    <script src="three.js"></script> <!-- Your star background script -->
+    <script src="songController.js"></script> <!-- Your music logic script -->
 </body>
 </html>
-

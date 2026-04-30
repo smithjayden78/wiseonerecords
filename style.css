@@ -1,3 +1,26 @@
+/* Ensures the Three.js canvas stays in the background */
+body { 
+    margin: 0; 
+    padding: 0;
+    overflow: hidden; 
+    font-family: sans-serif; 
+    /*background: #121212;*/ 
+    color: white; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+}
+.player-container { 
+    background: rgba(30, 30, 30, 0.9); /* Slight transparency to see stars behind it */
+    padding: 2rem; 
+    border-radius: 12px; 
+    text-align: center; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+    z-index: 10; /* Ensures player stays above the stars */
+}
+#track-title { margin-bottom: 1rem; font-size: 1.2rem; color: #fbfbfc; }
+
 .progress-container {
     display: flex;
     align-items: center;
