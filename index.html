@@ -7,18 +7,23 @@
     <title>Wise Ones Records</title>
 </head>
 <h1>
-    WISE ONE RECORDS 
+   THE WISE ONES RECORDS 
 </h1>
 <body>
-    <!-- 2. Player Interface -->
     <div class="player-container">
+        <img id="album-cover" style="width: 200px; height: 200px; border-radius: 8px; margin-bottom: 1rem; object-fit: cover;">
         <div id="track-title"></div>
-        
+        <div class="controls">
+        <button id="prev-btn">⏮</button>
+        <button id="play-pause-btn">⏯</button>
+        <button id="next-btn">⏭</button>
+        <button id="shuffle-btn">🔀</button>
+    </div>
         <audio id="audio-player">
             Your browser does not support the audio element.
         </audio>
         
-        <button id="start-btn" style="padding: 10px 20px; cursor: pointer;">WELCOME TO THE PARTY</button>
+        <button id="start-btn" style="padding: 10px 20px; cursor: pointer;">WELCOME TO THE PARTY</button> <!--Might remove-->
         
         <div class="progress-container">
             <span id="current-time">0:00</span>

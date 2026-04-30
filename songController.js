@@ -4,20 +4,27 @@ const startBtn = document.getElementById('start-btn');
 const currentTimeLabel = document.getElementById('current-time')
 const durationLabel = document.getElementById('duration')
 const progressBar = document.getElementById('progress-bar')
+const albumCover = document.getElementById('album-cover');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const shuffleBtn = document.getElementById('shuffle-btn');
+
+let isShuffle = false;
 
 const playlist = [
-    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4" },
-    { title: "Luv 66", file: "Bangers/Luv 66.mp4"},
+    { title: "Greater Love", file: "Bangers/greater love.mp4", image: "Covers/greater love.jpeg" }, 
+    { title: "Wont Stop", file: "Bangers/Wont Stop.mp4", image: "Covers/Wont stop.jpeg" },
+    { title: "Luv 66", file: "Bangers/Luv 66.mp4", image: "Covers/Luv 66.jpeg"},
+    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4", image: "Covers/Welcome to the Party Cover.jpeg" },
     { title: "Never Leave Ya", file: "Bangers/Never leave ya.mp4" }, 
     { title: "Gypsy vocals", file: "Bangers/Gypsy vocals.mp4" }, 
     { title: "Falling in Love", file: "Bangers/Falling in love.m4a" },
     { title: "Grateful", file: "Bangers/Grateful [VOCAL DEMO].m4a" }, 
     { title: "Jamka", file: "Bangers/Jamka.mp4" }, 
     { title: "Washa", file: "Bangers/Washa.mp4" }, 
-    { title: "Greater Love", file: "Bangers/greater love.mp4" }, 
     { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" },   
     { title: "SpaceJam", file: "Bangers/SpaceJam.mp4" }, 
-    { title: "Wont Stop", file: "Bangers/Wont Stop.mp4" }, 
     { title: "Your Body", file: "Bangers/Your Body.mp4" }
 ];
 
@@ -26,6 +33,7 @@ let currentTrackIndex = 0;
 function loadAndPlay(index) {
     if (index >= playlist.length) {
         trackTitle.innerText = "Mix Finished";
+        albumCover.src = "Covers/finished.jpeg"
         return;
     }
     
@@ -55,6 +63,20 @@ function loadAndPlay(index) {
         });
         
         // Clean up the listener so it doesn't stack
+        audioPlayer.onloadeddata = null;
+    };
+    if (track.image) {
+        albumCover.src = track.image;
+    }
+
+    // Set the new file and load
+    audioPlayer.src = track.file;
+    audioPlayer.load();
+
+    audioPlayer.onloadeddata = () => {
+        trackTitle.innerText = `${track.title}`;
+        durationLabel.innerText = formatTime(audioPlayer.duration);
+        audioPlayer.play().catch(error => console.error("Playback failed:", error));
         audioPlayer.onloadeddata = null;
     };
 }
@@ -101,4 +123,42 @@ audioPlayer.addEventListener('timeupdate', () => {
         progressBar.style.width = percent + "%";
     }
     // Inside your existing timeupdate listener
+});
+// Toggle Play/Pause
+playPauseBtn.addEventListener('click', () => {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseBtn.innerText = "⏸";
+    } else {
+        audioPlayer.pause();
+        playPauseBtn.innerText = "▶";
+    }
+});
+
+// Next Song
+nextBtn.addEventListener('click', () => {
+    if (isShuffle) {
+        currentTrackIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    }
+    loadAndPlay(currentTrackIndex);
+});
+
+// Previous Song
+prevBtn.addEventListener('click', () => {
+    // If song is more than 3 seconds in, restart the current song
+    // Otherwise, go to the previous song in the array
+    if (audioPlayer.currentTime > 3) {
+        audioPlayer.currentTime = 0;
+    } else {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadAndPlay(currentTrackIndex);
+    }
+});
+
+// Toggle Shuffle
+shuffleBtn.addEventListener('click', () => {
+    isShuffle = !isShuffle;
+    shuffleBtn.style.color = isShuffle ? "#bb86fc" : "white"; // Purple when active
 });
