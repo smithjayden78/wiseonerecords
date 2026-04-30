@@ -15,11 +15,8 @@ const playlist = [
     { title: "Jamka", file: "Bangers/Jamka.mp4" }, 
     { title: "Washa", file: "Bangers/Washa.mp4" }, 
     { title: "Greater Love", file: "Bangers/greater love.mp4" }, 
-    { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" }, 
-    //{ title: "Jamka", file: "Bangers/Jamka.mp4" }, 
-    //{ title: "Never Leave Ya", file: "Bangers/Never leave ya.m4a.mp4" },  
+    { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" },   
     { title: "SpaceJam", file: "Bangers/SpaceJam.mp4" }, 
-    //{ title: "Washa", file: "Bangers/Washa.mp4" }, 
     { title: "Wont Stop", file: "Bangers/Wont Stop.mp4" }, 
     { title: "Your Body", file: "Bangers/Your Body.mp4" }
 ];

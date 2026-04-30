@@ -1,4 +1,16 @@
 /* Ensures the Three.js canvas stays in the background */
+h1{
+    position: absolute;
+    top: 40px; /* Distance from the top */
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    font-size: 3rem;
+    letter-spacing: 5px;
+    color: white;
+    text-shadow: 0 0 15px rgba(187, 134, 252, 1); /* Subtle purple glow to match your theme */
+    z-index: 20; /* Ensures it stays above the star background */
+}
 body { 
     margin: 0; 
     padding: 0;
