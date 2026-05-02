@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Wise Ones Records</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wise Ones Records</title>
+<link rel="stylesheet" href="style.css">
 </head>
-<h1>
-   THE WISE ONES RECORDS 
-</h1>
+
 <body>
-    <div class="player-container">
-        <img id="album-cover" src="Covers/wise ones.png"style="width: 250px; height: 250px; border-radius: 8px; margin-bottom: 1rem; object-fit: cover;">
-        <div id="track-title"></div>
-        <div class="controls">
-        <button id="prev-btn">⏮</button>
-        <button id="play-pause-btn">⏯</button>
-        <button id="next-btn">⏭</button>
-        <button id="shuffle-btn">🔀</button>
+
+<header class="header">
+    <h1>THE WISE ONES</h1>
+    <p class="subtitle">Welcome to the Party</p>
+</header>
+
+<div class="player-container">
+
+    <div class="album-wrapper">
+        <img id="album-cover" src="Covers/wise ones.png">
     </div>
-        <audio id="audio-player">
-            Your browser does not support the audio element.
-        </audio>
-        
-        <button id="start-btn" style="padding: 10px 20px; cursor: pointer;">WELCOME TO THE PARTY</button> <!--Might remove-->
-        
+    <div id="player-ui" class = "hidden">
+        <div id="track-title">Select a track</div>
+
+        <div class="controls">
+            <button id="prev-btn">⏮</button>
+            <button id="play-pause-btn" class="main-btn">▶</button>
+            <button id="next-btn">⏭</button>
+            <button id="shuffle-btn">🔀</button>
+        </div>
+
         <div class="progress-container">
             <span id="current-time">0:00</span>
-            <div class="waveform-bg">
+            <div class="progress-bar-bg">
                 <div id="progress-bar"></div>
             </div>
             <span id="duration">0:00</span>
         </div>
     </div>
-    <!-- 1. Load External Libraries First -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- 3. Load Your Custom Scripts Last -->
-    <script src="three.js"></script> <!-- Your star background script -->
-    <script src="songController.js"></script> <!-- Your music logic script -->
+        <div id="playlist-container" class="hidden">
+        <h3>TRACKLIST</h3>
+        <ul id="playlist"></ul>
+    </div>
+    <button id="start-btn" class="start-btn">
+        ENTER EXPERIENCE
+    </button>
+
+    <audio id="audio-player"></audio>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<script src="three.js"></script>
+<script src="songController.js"></script>
+
 </body>
 </html>

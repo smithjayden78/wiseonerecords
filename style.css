@@ -1,51 +1,113 @@
 /* Ensures the Three.js canvas stays in the background */
-h1{
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+.hidden{
+    display: none;
+}
+/* HEADER */
+.header {
     position: absolute;
-    top: 40px; /* Distance from the top */
+    top: 30px;
     width: 100%;
     text-align: center;
-    margin: 0;
+    z-index: 10;
+}
+
+.header h1 {
+    letter-spacing: 6px;
     font-size: 2rem;
-    letter-spacing: 5px;
+    margin: 0;
+    text-shadow: 0 0 20px #bb86fc;
+}
+
+.subtitle {
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* PLAYER CARD */
+.player-container {
+    position: relative;
+    z-index: 10;
+
+    width: 320px;
+    padding: 2rem;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    text-align: center;
+}
+
+/* ALBUM */
+.album-wrapper img {
+    width: 220px;
+    height: 220px;
+    border-radius: 15px;
+    object-fit: cover;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    transition: transform 0.3s;
+}
+
+.album-wrapper img:hover {
+    transform: scale(1.05);
+}
+
+/* TRACK TITLE */
+#track-title {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* CONTROLS */
+.controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+.controls button {
+    background: none;
+    border: none;
     color: white;
-    text-shadow: 0 0 15px rgba(187, 134, 252, 1); /* Subtle purple glow to match your theme */
-    z-index: 20; /* Ensures it stays above the star background */
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-body { 
-    margin: 0; 
-    padding: 0;
-    overflow: hidden; 
-    font-family: sans-serif; 
-    /*background: #121212;*/ 
-    color: white; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; 
+.controls button:hover {
+    color: #bb86fc;
+    transform: scale(1.2);
 }
-.player-container { 
-    background: rgba(123, 119, 119, 0.3); /* Slight transparency to see stars behind it */
-    padding: 2rem; 
-    border-radius: 12px; 
-    text-align: center; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
-    z-index: 10; /* Ensures player stays above the stars */
-}
-#track-title { margin-bottom: 1rem; font-size: 1.2rem; color: #fbfbfc; }
 
+.main-btn {
+    font-size: 2.2rem;
+}
+
+/* PROGRESS BAR */
 .progress-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 10px;
-    margin-top: 20px;
-    width: 300px; /* Adjust based on your preference */
 }
 
-.waveform-bg {
-    flex-grow: 1;
-    height: 10px;
+.progress-bar-bg {
+    flex: 1;
+    height: 6px;
     background: #333;
     border-radius: 5px;
     overflow: hidden;
@@ -54,30 +116,62 @@ body {
 #progress-bar {
     height: 100%;
     width: 0%;
-    background: #bb86fc;
+    background: linear-gradient(90deg, #bb86fc, #7b5cff);
     transition: width 0.1s linear;
 }
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
-}
 
-.controls button {
-    background: none;
+/* START BUTTON */
+.start-btn {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
     border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(90deg, #bb86fc, #7b5cff);
     color: white;
-    font-size: 1.5rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s, color 0.2s;
+
+    transition: 0.3s;
 }
 
-.controls button:hover {
-    color: #bb86fc;
-    transform: scale(1.2);
+.start-btn:hover {
+    transform: scale(1.05);
+}
+#playlist-container {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
 }
 
-#play-pause-btn {
-    font-size: 2rem; /* Make the main button bigger */
+#playlist-container h3 {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+#playlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#playlist li {
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+#playlist li:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+#playlist li.active {
+    background: #bb86fc;
+    color: black;
+    font-weight: bold;
 }

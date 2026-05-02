@@ -1,14 +1,17 @@
 const audioPlayer = document.getElementById('audio-player');
 const trackTitle = document.getElementById('track-title');
 const startBtn = document.getElementById('start-btn');
-const currentTimeLabel = document.getElementById('current-time')
-const durationLabel = document.getElementById('duration')
-const progressBar = document.getElementById('progress-bar')
+const currentTimeLabel = document.getElementById('current-time');
+const durationLabel = document.getElementById('duration');
+const progressBar = document.getElementById('progress-bar');
 const albumCover = document.getElementById('album-cover');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const shuffleBtn = document.getElementById('shuffle-btn');
+const playerUI = document.getElementById('player-ui');
+const playlistElement = document.getElementById('playlist');
+const playlistContainer = document.getElementById('playlist-container');
 
 let isShuffle = false;
 
@@ -27,6 +30,22 @@ const playlist = [
     { title: "SpaceJam", file: "Bangers/SpaceJam.mp4" }, 
     { title: "Your Body", file: "Bangers/Your Body.mp4" }
 ];
+
+function renderPlaylist() {
+    playlistElement.innerHTML = "";
+
+    playlist.forEach((track, index) => {
+        const li = document.createElement("li");
+        li.innerText = track.title;
+
+        li.addEventListener('click', () => {
+            currentTrackIndex = index;
+            loadAndPlay(index);
+        });
+
+        playlistElement.appendChild(li);
+    });
+}
 
 let currentTrackIndex = 0;
 
@@ -77,13 +96,22 @@ function loadAndPlay(index) {
         trackTitle.innerText = `${track.title}`;
         durationLabel.innerText = formatTime(audioPlayer.duration);
         audioPlayer.play().catch(error => console.error("Playback failed:", error));
+        playPauseBtn.innerText = "⏸";
         audioPlayer.onloadeddata = null;
     };
+        const items = document.querySelectorAll("#playlist li");
+        items.forEach((item, i) => {
+        item.classList.toggle("active", i === index);
+    });
 }
 
-// Start button satisfies the "User Gesture" requirement
 startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none'; // Hide button after start
+    startBtn.style.display = 'none';
+
+    playerUI.classList.remove('hidden');
+    playlistContainer.classList.remove('hidden'); // 👈 SHOW LIST
+
+    renderPlaylist();
     loadAndPlay(currentTrackIndex);
 });
 
