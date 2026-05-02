@@ -33,6 +33,7 @@ function loadTrack(index) {
     albumCover.src = track.image;
     audio.src = track.file;
     updatePlaylistUI();
+    gsap.fromTo("#app-interface", { filter: "hue-rotate(90deg) brightness(2)" }, { filter: "hue-rotate(0deg) brightness(1)", duration: 0.2 });
 }
 
 function updatePlaylistUI() {

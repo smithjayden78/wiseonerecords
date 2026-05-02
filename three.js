@@ -17,26 +17,34 @@ const geometry = new THREE.BufferGeometry();
 const positions = new Float32Array(starCount * 3);
 const colors = new Float32Array(starCount * 3);
 
+// Modify your star loop in three.js to favor pink and blue stars
 for (let i = 0; i < starCount * 3; i += 3) {
-    // Position
-    positions[i] = (Math.random() - 0.5) * 1500;
-    positions[i+1] = (Math.random() - 0.5) * 1500;
-    positions[i+2] = (Math.random() - 0.5) * 1500;
+    positions[i] = (Math.random() - 0.5) * 2000;
+    positions[i+1] = (Math.random() - 0.5) * 2000;
+    positions[i+2] = (Math.random() - 0.5) * 2000;
 
-    // Subtle Purple/Blue Star Colors
-    colors[i] = 0.7 + Math.random() * 0.3; // R
-    colors[i+1] = 0.5 + Math.random() * 0.3; // G
-    colors[i+2] = 1.0; // B (Favor Blue/Purple)
+    // 70% Pink stars, 30% Blue stars
+    if (Math.random() > 0.3) {
+        // Neon Pink
+        colors[i] = 1.0;     // R
+        colors[i+1] = 0.05;  // G
+        colors[i+2] = 0.9;   // B
+    } else {
+        // Electric Blue
+        colors[i] = 0.0;     // R
+        colors[i+1] = 0.95;  // G
+        colors[i+2] = 1.0;   // B
+    }
 }
 
 geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
 const material = new THREE.PointsMaterial({
-    size: 1.5,
+    size: 2.5, // Slightly larger stars for that 90s glow
     vertexColors: true,
     transparent: true,
-    opacity: 0.8,
+    opacity: 1,
     sizeAttenuation: true
 });
 
