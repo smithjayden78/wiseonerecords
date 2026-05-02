@@ -1,169 +1,41 @@
-/* Ensures the Three.js canvas stays in the background */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: black;
     color: white;
+}
+
+.app {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    overflow: hidden;
 }
-.hidden{
-    display: none;
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: rgba(0,0,0,0.9);
+    padding: 20px;
+    border-right: 1px solid rgba(255,255,255,0.1);
 }
-/* HEADER */
-.header {
-    position: absolute;
-    top: 30px;
+
+#search {
     width: 100%;
-    text-align: center;
-    z-index: 10;
-}
-
-.header h1 {
-    letter-spacing: 6px;
-    font-size: 2rem;
-    margin: 0;
-    text-shadow: 0 0 20px #bb86fc;
-}
-
-.subtitle {
-    opacity: 0.7;
-    font-size: 0.9rem;
-}
-
-/* PLAYER CARD */
-.player-container {
-    position: relative;
-    z-index: 10;
-
-    width: 320px;
-    padding: 2rem;
-    border-radius: 20px;
-
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    text-align: center;
-}
-
-/* ALBUM */
-.album-wrapper img {
-    width: 220px;
-    height: 220px;
-    border-radius: 15px;
-    object-fit: cover;
-
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-    transition: transform 0.3s;
-}
-
-.album-wrapper img:hover {
-    transform: scale(1.05);
-}
-
-/* TRACK TITLE */
-#track-title {
-    margin-top: 15px;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-/* CONTROLS */
-.controls {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-}
-
-.controls button {
-    background: none;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 8px;
     border: none;
-    color: white;
-    font-size: 1.4rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.controls button:hover {
-    color: #bb86fc;
-    transform: scale(1.2);
-}
-
-.main-btn {
-    font-size: 2.2rem;
-}
-
-/* PROGRESS BAR */
-.progress-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.progress-bar-bg {
-    flex: 1;
-    height: 6px;
-    background: #333;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-#progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #bb86fc, #7b5cff);
-    transition: width 0.1s linear;
-}
-
-/* START BUTTON */
-.start-btn {
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-
-    background: linear-gradient(90deg, #bb86fc, #7b5cff);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-
-    transition: 0.3s;
-}
-
-.start-btn:hover {
-    transform: scale(1.05);
-}
-#playlist-container {
-    margin-top: 20px;
-    max-height: 200px;
-    overflow-y: auto;
-    text-align: left;
-}
-
-#playlist-container h3 {
-    font-size: 0.9rem;
-    opacity: 0.6;
-    margin-bottom: 10px;
 }
 
 #playlist {
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
 }
 
 #playlist li {
-    padding: 8px;
-    border-radius: 6px;
+    padding: 10px;
     cursor: pointer;
-    transition: 0.2s;
-    font-size: 0.9rem;
 }
 
 #playlist li:hover {
@@ -173,5 +45,105 @@ body {
 #playlist li.active {
     background: #bb86fc;
     color: black;
-    font-weight: bold;
+}
+
+/* PLAYER */
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-card {
+    width: 350px;
+    padding: 2rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    text-align: center;
+}
+
+/* ALBUM */
+.album {
+    width: 250px;
+    height: 250px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.album.spin {
+    animation: spin 6s linear infinite;
+}
+
+
+
+/* CONTROLS */
+.controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+button:hover {
+    color: #bb86fc;
+}
+
+/* WAVEFORM */
+#waveform {
+    margin: 15px 0;
+}
+
+/* EQUALIZER */
+.equalizer {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    visibility: hidden;
+}
+
+.equalizer span {
+    width: 4px;
+    height: 10px;
+    background: #bb86fc;
+    animation: bounce 1s infinite;
+}
+
+.equalizer span:nth-child(2){animation-delay:0.2s;}
+.equalizer span:nth-child(3){animation-delay:0.4s;}
+.equalizer span:nth-child(4){animation-delay:0.6s;}
+
+@keyframes bounce {
+    0%,100%{height:10px;}
+    50%{height:20px;}
+}
+
+/* VOLUME */
+.volume {
+    margin-top: 10px;
+}
+
+/* START BUTTON */
+.start-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #bb86fc;
+    border-radius: 10px;
+    color: black;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .sidebar{display:none;}
+    .player-card{width:90%;}
 }

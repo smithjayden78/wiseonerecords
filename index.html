@@ -4,56 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wise Ones Records</title>
+
 <link rel="stylesheet" href="style.css">
+
+<!-- WaveSurfer -->
+<script src="https://unpkg.com/wavesurfer.js"></script>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 
 <body>
 
-<header class="header">
-    <h1>THE WISE ONES</h1>
-    <p class="subtitle">Welcome to the Party</p>
-</header>
+<div class="app">
 
-<div class="player-container">
-
-    <div class="album-wrapper">
-        <img id="album-cover" src="Covers/wise ones.png">
-    </div>
-    <div id="player-ui" class = "hidden">
-        <div id="track-title">Select a track</div>
-
-        <div class="controls">
-            <button id="prev-btn">⏮</button>
-            <button id="play-pause-btn" class="main-btn">▶</button>
-            <button id="next-btn">⏭</button>
-            <button id="shuffle-btn">🔀</button>
-        </div>
-
-        <div class="progress-container">
-            <span id="current-time">0:00</span>
-            <div class="progress-bar-bg">
-                <div id="progress-bar"></div>
-            </div>
-            <span id="duration">0:00</span>
-        </div>
-    </div>
-        <div id="playlist-container" class="hidden">
-        <h3>TRACKLIST</h3>
+    <aside class="sidebar">
+        <h2>WISE ONES</h2>
+        <input type="text" id="search" placeholder="Search tracks...">
         <ul id="playlist"></ul>
-    </div>
-    <button id="start-btn" class="start-btn">
-        ENTER EXPERIENCE
-    </button>
+    </aside>
 
-    <audio id="audio-player"></audio>
+    <main class="main">
+
+        <div class="player-card">
+
+            <img id="album-cover" class="album" src="Covers/wise ones.png">
+
+            <h2 id="track-title">WELCOME TO THE PARTY</h2>
+
+            <div class="equalizer" id="equalizer">
+                <span></span><span></span><span></span><span></span>
+            </div>
+
+            <div id="waveform"></div>
+
+            <div class="controls" id="controls" style="display:none;">
+                <button id="shuffle-btn">🔀</button>
+                <button id="prev-btn">⏮</button>
+                <button id="play-pause-btn">▶</button>
+                <button id="next-btn">⏭</button>
+                <button id="repeat-btn">🔁</button>
+            </div>
+
+            
+
+            <button id="start-btn" class="start-btn">
+                ENTER EXPERIENCE
+            </button>
+
+        </div>
+
+    </main>
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<audio id="audio-player"></audio>
 
-<script src="three.js"></script>
 <script src="songController.js"></script>
-
+<script src="three.js"></script>
 </body>
 </html>

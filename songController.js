@@ -1,192 +1,125 @@
-const audioPlayer = document.getElementById('audio-player');
 const trackTitle = document.getElementById('track-title');
 const startBtn = document.getElementById('start-btn');
-const currentTimeLabel = document.getElementById('current-time');
-const durationLabel = document.getElementById('duration');
-const progressBar = document.getElementById('progress-bar');
 const albumCover = document.getElementById('album-cover');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const shuffleBtn = document.getElementById('shuffle-btn');
-const playerUI = document.getElementById('player-ui');
+const repeatBtn = document.getElementById('repeat-btn');
 const playlistElement = document.getElementById('playlist');
-const playlistContainer = document.getElementById('playlist-container');
+const searchInput = document.getElementById('search');
+const equalizer = document.getElementById('equalizer');
+const volumeSlider = document.getElementById('volume');
+const controls = document.getElementById('controls');
 
+let wavesurfer;
+let currentTrackIndex = 0;
 let isShuffle = false;
+let isRepeat = false;
 
 const playlist = [
     { title: "Grateful", file: "Bangers/Grateful [VOCAL DEMO].m4a", image:"Covers/party.jpeg" }, 
     { title: "Greater Love", file: "Bangers/greater love.mp4", image: "Covers/greater love.jpeg" }, 
     { title: "Wont Stop", file: "Bangers/Wont Stop.mp4", image: "Covers/Wont stop.jpeg" },
     { title: "Luv 66", file: "Bangers/Luv 66.mp4", image: "Covers/Luv 66.jpeg"},
-    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4", image: "Covers/Welcome to the Party Cover.jpeg" },
-    { title: "Never Leave Ya", file: "Bangers/Never leave ya.mp4" }, 
-    { title: "Gypsy vocals", file: "Bangers/Gypsy vocals.mp4" }, 
-    { title: "Falling in Love", file: "Bangers/Falling in love.m4a" },
-    { title: "Jamka", file: "Bangers/Jamka.mp4" }, 
-    { title: "Washa", file: "Bangers/Washa.mp4" }, 
-    { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" },   
-    { title: "SpaceJam", file: "Bangers/SpaceJam.mp4" }, 
-    { title: "Your Body", file: "Bangers/Your Body.mp4" }
+    { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4", image: "Covers/Welcome to the Party Cover.jpeg" }
 ];
 
-function renderPlaylist() {
-    playlistElement.innerHTML = "";
-
-    playlist.forEach((track, index) => {
-        const li = document.createElement("li");
-        li.innerText = track.title;
-
-        li.addEventListener('click', () => {
-            currentTrackIndex = index;
-            loadAndPlay(index);
-        });
-
+function renderPlaylist(filter=""){
+    playlistElement.innerHTML="";
+    playlist
+    .filter(t=>t.title.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(track=>{
+        const li=document.createElement("li");
+        li.innerText=track.title;
+        li.onclick=()=>{
+            currentTrackIndex=playlist.indexOf(track);
+            loadAndPlay(currentTrackIndex);
+        };
         playlistElement.appendChild(li);
     });
 }
 
-let currentTrackIndex = 0;
+function loadAndPlay(index){
+    const track=playlist[index];
+    if(!track) return;
 
-function loadAndPlay(index) {
-    if (index >= playlist.length) {
-        trackTitle.innerText = "Mix Finished";
-        albumCover.src = "Covers/finished.jpeg"
-        return;
-    }
-    
-    const track = playlist[index];
-    
-    audioPlayer.pause();
-    audioPlayer.src = ""; // Clear the old source entirely
-    
-    //Reset the UI to blank
-    progressBar.style.width = "0%";
-    currentTimeLabel.innerText = "0:00";
-    durationLabel.innerText = "0:00";
-    trackTitle.innerText = `Loading: ${track.title}...`;
+    if(wavesurfer) wavesurfer.destroy();
 
-    //Set the new file
-    audioPlayer.src = track.file;
-    audioPlayer.load();
+    wavesurfer=WaveSurfer.create({
+        container:"#waveform",
+        waveColor:"#555",
+        progressColor:"#bb86fc",
+        height:60
+    });
 
-    //browser to say "I'm ready"
-    audioPlayer.onloadeddata = () => {
-        trackTitle.innerText = `${track.title}`;
-        
-        durationLabel.innerText = formatTime(audioPlayer.duration);
-        
-        audioPlayer.play().catch(error => {
-            console.error("Playback failed:", error);
-        });
-        
-        // Clean up the listener so it doesn't stack
-        audioPlayer.onloadeddata = null;
-    };
-    if (track.image) {
-        albumCover.src = track.image;
-    }
+    wavesurfer.load(track.file);
 
-    // Set the new file and load
-    audioPlayer.src = track.file;
-    audioPlayer.load();
+    trackTitle.innerText=track.title;
+    albumCover.src=track.image;
 
-    audioPlayer.onloadeddata = () => {
-        trackTitle.innerText = `${track.title}`;
-        durationLabel.innerText = formatTime(audioPlayer.duration);
-        audioPlayer.play().catch(error => console.error("Playback failed:", error));
-        playPauseBtn.innerText = "⏸";
-        audioPlayer.onloadeddata = null;
-    };
-        const items = document.querySelectorAll("#playlist li");
-        items.forEach((item, i) => {
-        item.classList.toggle("active", i === index);
+    wavesurfer.on('ready',()=>{
+        wavesurfer.play();
+        playPauseBtn.innerText="⏸";
+        equalizer.style.visibility="visible";
+        albumCover.classList.add("spin");
+    });
+
+    wavesurfer.on('finish',()=>{
+        if(isRepeat) wavesurfer.play();
+        else nextBtn.click();
     });
 }
 
-startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none';
-
-    playerUI.classList.remove('hidden');
-    playlistContainer.classList.remove('hidden'); // 👈 SHOW LIST
-
+startBtn.onclick=()=>{
+    startBtn.style.display="none";
+    controls.style.display="flex";
     renderPlaylist();
     loadAndPlay(currentTrackIndex);
-});
+};
 
-// The "Live" loop: when one song ends, the next starts immediately
-// This event fires the exact millisecond the current song finishes
-audioPlayer.addEventListener('ended', () => {
-    console.log("Current song finished. Moving to next track...");
-    
-    currentTrackIndex++; // Move to the next song in the array
-    
-    // Check if we still have songs left in the playlist
-    if (currentTrackIndex < playlist.length) {
-        loadAndPlay(currentTrackIndex);
+playPauseBtn.onclick=()=>{
+    if(!wavesurfer) return;
+    wavesurfer.playPause();
+
+    if(wavesurfer.isPlaying()){
+        playPauseBtn.innerText="⏸";
+        equalizer.style.visibility="visible";
+        albumCover.classList.add("spin");
     } else {
-        console.log("End of playlist reached.");
-        trackTitle.innerText = "Mix Finished";
-        // Optional: Set currentTrackIndex = 0; loadAndPlay(0); to loop the whole mix
+        playPauseBtn.innerText="▶";
+        equalizer.style.visibility="hidden";
+        albumCover.classList.remove("spin");
     }
-});
-function formatTime(seconds) {
-    let min = Math.floor(seconds / 60);
-    let sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-}
+};
 
-// Update the duration once the file is loaded
-audioPlayer.addEventListener('loadedmetadata', () => {
-    durationLabel.innerText = formatTime(audioPlayer.duration);
-});
+nextBtn.onclick=()=>{
+    currentTrackIndex=isShuffle
+        ? Math.floor(Math.random()*playlist.length)
+        : (currentTrackIndex+1)%playlist.length;
 
-// Update progress as the song plays
-audioPlayer.addEventListener('timeupdate', () => {
-    if (!isNaN(audioPlayer.duration)) { // Ensure duration is a number
-        currentTimeLabel.innerText = formatTime(audioPlayer.currentTime);
-        
-        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        progressBar.style.width = percent + "%";
-    }
-    // Inside your existing timeupdate listener
-});
-// Toggle Play/Pause
-playPauseBtn.addEventListener('click', () => {
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-        playPauseBtn.innerText = "⏸";
-    } else {
-        audioPlayer.pause();
-        playPauseBtn.innerText = "▶";
-    }
-});
-
-// Next Song
-nextBtn.addEventListener('click', () => {
-    if (isShuffle) {
-        currentTrackIndex = Math.floor(Math.random() * playlist.length);
-    } else {
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    }
     loadAndPlay(currentTrackIndex);
-});
+};
 
-// Previous Song
-prevBtn.addEventListener('click', () => {
-    // If song is more than 3 seconds in, restart the current song
-    // Otherwise, go to the previous song in the array
-    if (audioPlayer.currentTime > 3) {
-        audioPlayer.currentTime = 0;
-    } else {
-        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-        loadAndPlay(currentTrackIndex);
-    }
-});
+prevBtn.onclick=()=>{
+    currentTrackIndex=(currentTrackIndex-1+playlist.length)%playlist.length;
+    loadAndPlay(currentTrackIndex);
+};
 
-// Toggle Shuffle
-shuffleBtn.addEventListener('click', () => {
-    isShuffle = !isShuffle;
-    shuffleBtn.style.color = isShuffle ? "#bb86fc" : "white"; // Purple when active
-});
+shuffleBtn.onclick=()=>{
+    isShuffle=!isShuffle;
+    shuffleBtn.style.color=isShuffle?"#bb86fc":"white";
+};
+
+repeatBtn.onclick=()=>{
+    isRepeat=!isRepeat;
+    repeatBtn.style.color=isRepeat?"#bb86fc":"white";
+};
+
+volumeSlider.oninput=()=>{
+    if(wavesurfer) wavesurfer.setVolume(volumeSlider.value);
+};
+
+searchInput.oninput=(e)=>{
+    renderPlaylist(e.target.value);
+};
