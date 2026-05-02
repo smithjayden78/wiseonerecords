@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wise Ones Records | The Crew</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body class="arcade-theme">
+<nav class="top-nav">
+    <div class="nav-links">
+        <a href="arcade.html">ARCADE</a>
+        <a href="crew.html" style = "color: var(--neon-pink);">CREW</a>
+        <a href="gallery.html">GALLERY</a>
+        <a href="contact us.html">CONTACT</a>
+    </div>
+</nav>
+
+    <div class="selection-container">
+        <header class="player-select-header">
+            <h1 class="glitch-text" data-text="PLAYER SELECT">PLAYER SELECT</h1>
+            <p>Choose your fighter. Hover a card to scout the roster.</p>
+        </header>
+
+        <!-- Dynamic Bio Box -->
+        <div class="bio-display" id="bio-box">
+            <h2 id="bio-name">SELECT CREW</h2>
+            <p class="role-text">ROLE: <span id="bio-role">-</span></p>
+            <p id="bio-desc">Hover over a card to view intel...</p>
+        </div>
+
+        <!-- The Roster -->
+        <div class="roster-grid">
+            <!-- Card 1 -->
+            <div class="player-card blue-frame" 
+                 onmouseenter="updateBio('YOUNG 1', 'PRODUCER', 'The sonic architect. Known for heavy bass and late-night studio sessions.')">
+                <div class="card-inner">
+                    <img src="Crew/young.jpeg" alt="Young 1">
+                    <div class="card-label">
+                        <h3>YOUNG 1</h3>
+                        <p>Producer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="player-card pink-frame active-card" 
+                 onmouseenter="updateBio('JADAS', 'WEB DESIGNER', 'Web designer & info systems student. Pool shark. Somehow always at a funeral, wedding or birthday — guaranteed at least once a week.')">
+                <div class="card-inner">
+                    <img src="Crew/jaddas.jpeg" alt="Jadas">
+                    <div class="card-label">
+                        <h3>JADDAS</h3>
+                        <p>Web Designer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="player-card purple-frame" 
+                 onmouseenter="updateBio('JAGGER', 'HYPE / CREW', 'Geomatics student. Does not do much musically but the personality alone is a whole instrument. Just so funny.')">
+                <div class="card-inner">
+                    <img src="Crew/yaasier.jpeg" alt="Jagger">
+                    <div class="card-label">
+                        <h3>YEAH SIR</h3>
+                        <p>Hype / Crew</p>
+                    </div>
+                </div>
+            </div>
+            <div class="player-card pink-frame active-card" 
+                 onmouseenter="updateBio('KALELO', 'VOCALIST', 'Thinks he is Michael Jackson — and honestly, the swag backs it up. Studying Occupational Therapy. Strong personality, full-volume energy.')">
+                <div class="card-inner">
+                    <img src="Crew/kalelo.jpeg" alt="Jadas">
+                    <div class="card-label">
+                        <h3>KALELO</h3>
+                        <p>Vocalist</p>
+                    </div>
+                </div>
+            </div><div class="player-card pink-frame active-card" 
+                 onmouseenter="updateBio('EGGS', 'PRODUCER/VOCALIST', 'Main producer, occasional vocalist. Studying Management Studies. Lives for music and Vikings.')">
+                <div class="card-inner">
+                    <img src="Crew/eggs.jpeg" alt="Jadas">
+                    <div class="card-label">
+                        <h3>EGGS</h3>
+                        <p>Producer/Vocalist</p>
+                    </div>
+                </div>
+            </div><div class="player-card pink-frame active-card" 
+                 onmouseenter="updateBio('QIEYAAM', 'MULTI-TALENT / VISUALS', 'Man of many talents. Has been promising the music video for 6 months and counting. QIQI do you love me?')">
+                <div class="card-inner">
+                    <img src="Crew/Q.jpeg" alt="Jadas">
+                    <div class="card-label">
+                        <h3>QIQI</h3>
+                        <p>Multi-Talent / Visuals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="arcade-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <span class="status-light"></span>
+            <p>SYSTEM STATUS: <span class="neon-text-blue">ONLINE</span></p>
+        </div>
+        
+        <div class="footer-section center">
+            <p>&copy; 2026 WISE ONES RECORDS // ALL RIGHTS RESERVED</p>
+        </div>
+
+        <div class="footer-section right">
+            <p>v2.0.4_ARCHIVE</p>
+        </div>
+    </div>
+</footer>
+<script>
+        function updateBio(name, role, desc) {
+            document.getElementById('bio-name').innerText = name;
+            document.getElementById('bio-role').innerText = role;
+            document.getElementById('bio-desc').innerText = desc;
+            
+            // GSAP pop effect when text changes
+            gsap.fromTo("#bio-box", { scale: 0.98, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.2 });
+        }
+</script>
+<script src="songController.js"></script>
+<script src="three.js"></script>
+
+</body>
+</html>

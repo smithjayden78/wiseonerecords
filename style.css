@@ -4,10 +4,18 @@
     --arcade-black: #050505;
     --grid-color: rgba(0, 242, 255, 0.15);
 }
-
+.roster-grid{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* This allows cards to drop to the next line */
+    gap: 30px;
+    padding: 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 body {
     margin: 0;
-    overflow: hidden;
+    overflow-y: auto;
     font-family: 'Courier New', Courier, monospace;
     background: #000; /* Solid black base */
     color: white;
@@ -15,6 +23,13 @@ body {
     background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
                       linear-gradient(90deg, rgba(255, 0, 255, 0.03), rgba(0, 242, 255, 0.03));
     background-size: 100% 4px, 3px 100%;
+    padding-bottom: 100px;
+}
+canvas {
+    position: fixed;
+    top:0;
+    left: 0;
+    z-index: -1;
 }
 .top-nav {
     width: 100%;
@@ -298,3 +313,167 @@ body {
     filter: brightness(1.5);
     box-shadow: 0 0 80px var(--primary);
 }
+
+.arcade-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 2px solid var(--neon-blue);
+    padding: 10px 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.7rem;
+    z-index: 1000;
+    box-shadow: 0 -5px 15px rgba(0, 242, 255, 0.1);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-section.center {
+    letter-spacing: 2px;
+}
+
+/* Status Light Effect */
+.status-light {
+    width: 8px;
+    height: 8px;
+    background-color: #39ff14; /* Arcade Green */
+    border-radius: 50%;
+    box-shadow: 0 0 8px #39ff14;
+    animation: blink 2s infinite;
+}
+
+.neon-text-blue {
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px var(--neon-blue);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 5px;
+        padding: 5px;
+    }
+    .footer-section.right {
+        display: none; /* Hide version on mobile to save space */
+    }
+}
+
+
+
+
+
+
+/* Crew Specific Styles */
+.selection-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.player-select-header h1 {
+    font-size: 3rem;
+    color: #ffeb3b;
+    text-shadow: 0 0 10px #ffeb3b, 3px 3px 0px #f44336;
+    margin-bottom: 0;
+}
+
+/* Bio Box */
+.bio-display {
+    border: 2px solid var(--neon-pink);
+    margin: 30px auto;
+    padding: 20px;
+    width: 80%;
+    background: rgba(255, 0, 255, 0.05);
+    min-height: 120px;
+    box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.bio-display h2 { color: var(--neon-pink); margin: 0; text-transform: uppercase; }
+.role-text { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.8; }
+
+/* Roster Grid */
+.roster-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.player-card {
+    width: 280px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.player-card:hover {
+    transform: scale(1.05) translateY(-10px);
+    z-index: 5;
+}
+
+.card-inner {
+    border: 4px solid white;
+    background: #000;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Scanline Overlay on Images */
+.card-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+}
+
+.card-inner img {
+    width: 250px;
+    height: 300px;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.1);
+}
+
+/* Frame Colors */
+.blue-frame .card-inner { border-color: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
+.pink-frame .card-inner { border-color: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
+.purple-frame .card-inner { border-color: #9c27b0; box-shadow: 0 0 20px #9c27b0; }
+
+.card-label {
+    background: #000;
+    padding: 10px;
+    text-align: left;
+    border-top: 2px solid inherit;
+}
+
+.card-label h3 { font-size: 0.9rem; margin: 0; color: inherit; }
+.card-label p { font-size: 0.6rem; opacity: 0.6; margin: 0; }
+
+/* Dynamic color mapping */
+.blue-frame .card-label h3 { color: var(--neon-blue); }
+.pink-frame .card-label h3 { color: var(--neon-pink); }
+.purple-frame .card-label h3 { color: #9c27b0; }
