@@ -1,82 +1,80 @@
-// 1. Scene Setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-camera.position.z = 5; 
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Added alpha support
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(0x000000, 1); 
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
 
-// Force the canvas to stay in the background
-const canvas = renderer.domElement;
-canvas.style.position = 'fixed';
-canvas.style.top = '0';
-canvas.style.left = '0';
-canvas.style.width = '100vw';
-canvas.style.height = '100vh';
-canvas.style.zIndex = '-1'; // Behind everything
-canvas.style.pointerEvents = 'none'; // Don't block button clicks
+renderer.domElement.style.position = 'fixed';
+renderer.domElement.style.top = '0';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.zIndex = '-1';
 
-document.body.appendChild(canvas);
+// Create a more dense, colorful starfield
+const starCount = 8000;
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(starCount * 3);
+const colors = new Float32Array(starCount * 3);
 
-// 2. Stars
-const starGeometry = new THREE.BufferGeometry();
-const starMaterial = new THREE.PointsMaterial({ 
-    color: 0xffffff,
-    size: 0.8, // Crisp star points
+for (let i = 0; i < starCount * 3; i += 3) {
+    // Position
+    positions[i] = (Math.random() - 0.5) * 1500;
+    positions[i+1] = (Math.random() - 0.5) * 1500;
+    positions[i+2] = (Math.random() - 0.5) * 1500;
+
+    // Subtle Purple/Blue Star Colors
+    colors[i] = 0.7 + Math.random() * 0.3; // R
+    colors[i+1] = 0.5 + Math.random() * 0.3; // G
+    colors[i+2] = 1.0; // B (Favor Blue/Purple)
+}
+
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const material = new THREE.PointsMaterial({
+    size: 1.5,
+    vertexColors: true,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.8,
+    sizeAttenuation: true
 });
 
-const starVertices = [];
-for (let i = 0; i < 10000; i++) {
-    starVertices.push(
-        (Math.random() - 0.5) * 2000,
-        (Math.random() - 0.5) * 2000,
-        (Math.random() - 0.5) * 2000
-    );
-}
-
-starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-const stars = new THREE.Points(starGeometry, starMaterial);
+const stars = new THREE.Points(geometry, material);
 scene.add(stars);
 
-// 3. Shooting Stars (GSAP)
-function createShootingStar() {
-    const geometry = new THREE.SphereGeometry(0.4, 8, 8);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const sphere = new THREE.Mesh(geometry, material);
-    
-    sphere.position.set((Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800, -1000);
-    scene.add(sphere);
+camera.position.z = 500;
 
-    gsap.to(sphere.position, {
-        x: sphere.position.x + 400,
-        y: sphere.position.y - 400,
-        z: 500,
-        duration: 1,
-        onComplete: () => scene.remove(sphere)
-    });
+// Mouse Parallax Logic
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
 
-    setTimeout(createShootingStar, Math.random() * 4000 + 2000);
-}
-createShootingStar();
+document.addEventListener('mousemove', (event) => {
+    targetX = (event.clientX - windowHalfX) * 0.05;
+    targetY = (event.clientY - windowHalfY) * 0.05;
+});
 
-// 4. Animation Loop
 function animate() {
     requestAnimationFrame(animate);
-    if (stars) {
-        stars.rotation.y += 0.0003;
-        stars.rotation.x += 0.0001;
-    }
+
+    // Constant slow drift
+    stars.rotation.y += 0.001;
+    stars.rotation.x += 0.0005;
+
+    // Smooth Parallax movement
+    camera.position.x += (targetX - camera.position.x) * 0.02;
+    camera.position.y += (-targetY - camera.position.y) * 0.02;
+    camera.lookAt(scene.position);
+
     renderer.render(scene, camera);
 }
+
+animate();
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-animate();

@@ -1,29 +1,78 @@
+:root {
+    --primary: #bb86fc;
+    --glass: rgba(255, 255, 255, 0.08); 
+    --border: rgba(255, 255, 255, 0.1);
+}
+
 body {
     margin: 0;
+    overflow: hidden;
     font-family: 'Segoe UI', sans-serif;
-    background: black;
+    background: #000;
     color: white;
 }
 
-.app {
+#overlay {
+    position: fixed;
+    inset: 0;
     display: flex;
-    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    z-index: 100;
 }
 
-/* SIDEBAR */
-.sidebar {
-    width: 260px;
-    background: rgba(0,0,0,0.9);
-    padding: 20px;
-    border-right: 1px solid rgba(255,255,255,0.1);
+#start-btn {
+    padding: 15px 35px;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    color: var(--primary);
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
 }
+
+#start-btn:hover {
+    background: var(--primary);
+    color: black;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.glass-container {
+    display: flex;
+    width: 95vw; /* Slightly wider to give more room */
+    height: 85vh;
+    margin: 7.5vh auto;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden; /* Prevents internal elements from leaking out */
+}
+
+/* Sidebar Fixes */
+.sidebar {
+    width: 240px; /* Smaller width to prevent horizontal scroll */
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.2); /* Darker tint for text readability */
+}
+
+.brand h1 { font-size: 1.2rem; margin: 0; letter-spacing: 2px; }
+.brand p { font-size: 0.6rem; opacity: 0.5; margin-bottom: 20px; }
 
 #search {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    border: none;
+    color: white;
+    box-sizing: border-box; /* Crucial for width calculation */
+    margin-bottom: 20px;
 }
 
 #playlist {
@@ -31,119 +80,172 @@ body {
     padding: 0;
     margin: 0;
     overflow-y: auto;
+    overflow-x: hidden; /* No more left-right scrolling */
 }
 
 #playlist li {
-    padding: 10px;
+    padding: 12px 15px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8); /* Brighter text */
+    background: rgba(255, 255, 255, 0.03); /* Subtle background for visibility */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #playlist li:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-#playlist li.active {
-    background: #bb86fc;
-    color: black;
+#playlist li.active { 
+    color: white;
+    background: rgba(187, 134, 252, 0.2);
+    box-shadow: inset 0 0 10px rgba(187, 134, 252, 0.3);
+    border-left: 3px solid var(--primary);
+    text-shadow: 0 0 8px var(--primary);
 }
 
-/* PLAYER */
-.main {
+/* Custom Scrollbar for the Playlist */
+#playlist::-webkit-scrollbar {
+    width: 5px; /* Make it sleek and thin */
+}
+
+/* The Track (background of the scrollbar) */
+#playlist::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 5px;
+}
+
+/* The Handle (the part you drag) */
+#playlist::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--primary); /* Neon glow effect */
+}
+
+/* Handle on hover */
+#playlist::-webkit-scrollbar-thumb:hover {
+    background: white;
+    box-shadow: 0 0 15px white;
+}
+
+/* Firefox Support */
+#playlist {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) rgba(255, 255, 255, 0.05);
+}
+
+/* Player Section */
+.player-section {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.player-card {
-    width: 350px;
-    padding: 2rem;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(20px);
+.player-core {
+    width: 100%;
+    max-width: 400px;
     text-align: center;
+    padding: 20px;
 }
 
-/* ALBUM */
-.album {
-    width: 250px;
-    height: 250px;
+.album-wrapper img {
+    width: 245px;
+    height: 290px;
     border-radius: 15px;
-    object-fit: cover;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.9);
 }
 
-.album.spin {
-    animation: spin 6s linear infinite;
-}
+.track-info h2 { font-size: 1.4rem; margin: 20px 0 5px; }
+.artist-name { font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px; }
 
-
-
-/* CONTROLS */
-.controls {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.4rem;
+/* Progress Bar */
+.progress-area {
+    height: 5px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
     cursor: pointer;
 }
 
-button:hover {
-    color: #bb86fc;
-}
-
-/* WAVEFORM */
-#waveform {
-    margin: 15px 0;
-}
-
-/* EQUALIZER */
-.equalizer {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    visibility: hidden;
-}
-
-.equalizer span {
-    width: 4px;
-    height: 10px;
-    background: #bb86fc;
-    animation: bounce 1s infinite;
-}
-
-.equalizer span:nth-child(2){animation-delay:0.2s;}
-.equalizer span:nth-child(3){animation-delay:0.4s;}
-.equalizer span:nth-child(4){animation-delay:0.6s;}
-
-@keyframes bounce {
-    0%,100%{height:10px;}
-    50%{height:20px;}
-}
-
-/* VOLUME */
-.volume {
-    margin-top: 10px;
-}
-
-/* START BUTTON */
-.start-btn {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background: #bb86fc;
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--primary);
     border-radius: 10px;
-    color: black;
+    position: relative;
+    box-shadow: 0 0 15px var(--primary), 0 0 5px white; /* Neon bloom */
 }
 
-/* MOBILE */
-@media(max-width:768px){
-    .sidebar{display:none;}
-    .player-card{width:90%;}
+.time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+/* Controls */
+.main-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.play-btn {
+    background: white;
+    color: black;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    border: none;
+}
+
+.nav-btn, .sub-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.nav-btn:hover, .sub-btn:hover { opacity: 1; color: var(--primary); }
+#start-btn {
+    padding: 18px 45px;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    color: var(--primary);
+    font-weight: bold;
+    letter-spacing: 3px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0px var(--primary);
+}
+
+/* Hover Effect: Glow and Scale */
+#start-btn:hover {
+    background: var(--primary);
+    color: black;
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--primary), 0 0 60px rgba(187, 134, 252, 0.4);
+    text-shadow: none;
+}
+
+/* Click Effect: Pulse */
+#start-btn:active {
+    transform: scale(0.95);
+    filter: brightness(1.5);
+    box-shadow: 0 0 80px var(--primary);
 }

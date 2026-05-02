@@ -1,66 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wise Ones Records</title>
-
-<link rel="stylesheet" href="style.css">
-
-<!-- WaveSurfer -->
-<script src="https://unpkg.com/wavesurfer.js"></script>
-
-<!-- Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wise Ones Records | Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
-
 <body>
 
-<div class="app">
-
+<div class="glass-container" id="app-interface">
     <aside class="sidebar">
-        <h2>WISE ONES</h2>
-        <input type="text" id="search" placeholder="Search tracks...">
+        <div class="brand">
+            <h1>WISE ONES</h1>
+            <p>RECORDS</p>
+        </div>
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search Bangers...">
+        </div>
         <ul id="playlist"></ul>
     </aside>
 
-    <main class="main">
-
-        <div class="player-card">
-
-            <img id="album-cover" class="album" src="Covers/wise ones.png">
-
-            <h2 id="track-title">WELCOME TO THE PARTY</h2>
-
-            <div class="equalizer" id="equalizer">
-                <span></span><span></span><span></span><span></span>
+    <main class="player-section">
+        <div class="player-core">
+            <div class="album-wrapper">
+                <div class="album-glow"></div>
+                <img id="album-cover" src="Covers/wise ones.png" alt="Album Art">
             </div>
 
-            <div id="waveform"></div>
-
-            <div class="controls" id="controls" style="display:none;">
-                <button id="shuffle-btn">🔀</button>
-                <button id="prev-btn">⏮</button>
-                <button id="play-pause-btn">▶</button>
-                <button id="next-btn">⏭</button>
-                <button id="repeat-btn">🔁</button>
+            <div class="track-info">
+                <h2 id="track-title">WELCOME TO THE PARTY</h2>
+                <p class="artist-name">The Wise Ones</p>
             </div>
 
-            
+            <div class="playback-container">
+                <div class="time-stamps">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="progress-area" id="progress-bar">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
 
-            <button id="start-btn" class="start-btn">
-                ENTER EXPERIENCE
-            </button>
-
+            <div class="main-controls">
+                <button id="shuffle-btn" class="sub-btn">🔀</button>
+                <button id="prev-btn" class="nav-btn">⏮</button>
+                <button id="play-pause-btn" class="play-btn">▶</button>
+                <button id="next-btn" class="nav-btn">⏭</button>
+                <button id="repeat-btn" class="sub-btn">🔁</button>
+            </div>
         </div>
-
     </main>
+</div>
 
+<div id="overlay">
+    <button id="start-btn">ENTER THE ARCHIVE</button>
 </div>
 
 <audio id="audio-player"></audio>
-
 <script src="songController.js"></script>
 <script src="three.js"></script>
 </body>
