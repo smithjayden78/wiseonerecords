@@ -159,9 +159,11 @@ body {
     width: 220px;
     height: 220px;
     border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.9);
-}
+    object-fit: cover;
 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    transition: transform 0.3s;
+}
 .track-info h2 { font-size: 1.4rem; margin: 20px 0 5px; }
 .artist-name { font-size: 0.8rem; opacity: 0.6; margin-bottom: 25px; }
 
