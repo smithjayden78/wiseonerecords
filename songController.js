@@ -13,6 +13,7 @@ const shuffleBtn = document.getElementById('shuffle-btn');
 let isShuffle = false;
 
 const playlist = [
+    { title: "Grateful", file: "Bangers/Grateful [VOCAL DEMO].m4a", image:"Covers/party.jpeg" }, 
     { title: "Greater Love", file: "Bangers/greater love.mp4", image: "Covers/greater love.jpeg" }, 
     { title: "Wont Stop", file: "Bangers/Wont Stop.mp4", image: "Covers/Wont stop.jpeg" },
     { title: "Luv 66", file: "Bangers/Luv 66.mp4", image: "Covers/Luv 66.jpeg"},
@@ -20,7 +21,6 @@ const playlist = [
     { title: "Never Leave Ya", file: "Bangers/Never leave ya.mp4" }, 
     { title: "Gypsy vocals", file: "Bangers/Gypsy vocals.mp4" }, 
     { title: "Falling in Love", file: "Bangers/Falling in love.m4a" },
-    { title: "Grateful", file: "Bangers/Grateful [VOCAL DEMO].m4a" }, 
     { title: "Jamka", file: "Bangers/Jamka.mp4" }, 
     { title: "Washa", file: "Bangers/Washa.mp4" }, 
     { title: "I NEED UR LOVE", file: "Bangers/I NEED UR LOVE.mp4" },   
