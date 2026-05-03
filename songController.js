@@ -15,6 +15,9 @@ let isShuffle = false;
 let isRepeat = false;
 
 const playlist = [
+    { title: "Thank you LORD", file: "Bangers/Thank you LORD.mp4", image: "Covers/wise ones.png"},
+    { title: "Over You", file: "Bangers/Over You.mp4", image: "Covers/wise ones.png"},
+    { title: "Alone", file: "Bangers/Alone.mp4", image: "Covers/wise ones.png"},
     { title: "Grateful", file: "Bangers/Grateful [VOCAL DEMO].m4a", image:"Covers/party.jpeg" }, 
     { title: "Greater Love", file: "Bangers/greater love.mp4", image: "Covers/greater love.jpeg" }, 
     { title: "Wont Stop", file: "Bangers/Wont Stop.mp4", image: "Covers/Wont stop.jpeg" },
