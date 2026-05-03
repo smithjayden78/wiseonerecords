@@ -25,7 +25,7 @@ const playlist = [
     { title: "Jamka", file: "Bangers/Jamka.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
     { title: "SpaceJam", file: "Bangers/SpaceJam.mp4", image: "Covers/wise ones.png"},
     { title: "Your Body", file: "Bangers/Your Body.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
-    { title: "Gypsy", file: "Bangers/Gypsy vocals.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
+    { title: "Gypsy", file: "Bangers/Gypsy.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
 ];
 
 function loadTrack(index) {

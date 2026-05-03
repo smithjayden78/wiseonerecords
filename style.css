@@ -15,7 +15,7 @@
 }
 body {
     margin: 0;
-    overflow-y: auto;
+    overflow-y:auto;
     font-family: 'Courier New', Courier, monospace;
     background: #000; /* Solid black base */
     color: white;
