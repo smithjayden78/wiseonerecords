@@ -4,15 +4,15 @@
     --arcade-black: #050505;
     --grid-color: rgba(0, 242, 255, 0.15);
 }
-.roster-grid{
+/* .roster-grid{ 
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* This allows cards to drop to the next line */
+    flex-wrap: wrap; 
     gap: 30px;
     padding: 20px 40px;
     max-width: 1200px;
     margin: 0 auto;
-}
+}*/
 body {
     margin: 0;
     overflow-y:auto;
@@ -151,7 +151,7 @@ canvas {
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    overflow-x: hidden; /* No more left-right scrolling */
+    overflow-x: hidden; 
 }
 
 #playlist li {
