@@ -9,6 +9,7 @@ const durationEl = document.getElementById('duration');
 const playlistElement = document.getElementById('playlist');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const repeatBtn = document.getElementById('repeat-btn');
+const searchInput = document.getElementById('search');
 
 let trackIndex = 0;
 let isShuffle = false;
@@ -180,3 +181,21 @@ function renderPlaylist() {
         playlistElement.appendChild(li);
     });
 }
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    const playlistItems = document.querySelectorAll('#playlist li');
+    
+    playlistItems.forEach((item) => {
+        // Reads the exact text displaying on the screen for this song row
+        const itemText = item.innerText.toLowerCase();
+        
+        // If the text matches your search query, keep it visible
+        if (itemText.includes(searchTerm)) {
+            // Restore your clean neon border layout style
+            item.style.display = ''; 
+        } else {
+            // Hide the rows that don't match
+            item.style.display = 'none';  
+        }
+    });
+});

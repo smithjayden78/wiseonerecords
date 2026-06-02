@@ -150,6 +150,24 @@ canvas {
     box-sizing: border-box; /* Crucial for width calculation */
     margin-bottom: 20px;
 }
+.search-box input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-blue);
+    color: #fff;
+    padding: 8px 12px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Give it a glowing hot pink active border when clicked */
+.search-box input:focus {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink);
+}
 
 #playlist {
     list-style: none;
