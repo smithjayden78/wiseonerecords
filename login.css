@@ -1,0 +1,125 @@
+/* Core layout for full window centering */
+.login-body {
+    background-color: #05050a;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+.login-logo-wrapper {
+    margin-bottom: 10px;
+}
+
+/* The Retro Console Container Box */
+.terminal-box {
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid var(--neon-blue);
+    padding: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+    position: relative;
+}
+
+.terminal-title {
+    color: #ffeb3b; /* Arcade Yellow */
+    margin: 0 0 5px 0;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
+}
+
+.terminal-subtitle {
+    color: #ffffff;
+    font-size: 0.75rem;
+    margin: 0 0 25px 0;
+    text-align: center;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* Inputs styling matching your search component */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    color: var(--neon-blue);
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    background: rgba(5, 5, 10, 0.6);
+    border: 1px solid var(--neon-blue);
+    padding: 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+    border-color: #ffeb3b;
+    box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);
+}
+
+/* Error layout styling */
+.terminal-error {
+    color: #ff3333;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    text-align: center;
+    display: none;
+    font-weight: bold;
+}
+
+/* Arcade Action Button */
+.login-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px solid #ffeb3b;
+    color: #ffeb3b;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background: #ffeb3b;
+    color: #000;
+    box-shadow: 0 0 15px #ffeb3b;
+}
+
+/* Error feedback motion */
+@keyframes terminalShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}

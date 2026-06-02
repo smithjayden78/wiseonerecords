@@ -1,95 +1,65 @@
 <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Heart & Soul | Experience</title>
-            <link rel="stylesheet" href="style.css">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-        </head>
-        <body>
-            <nav class="top-nav">
-                <div class="nav-links">
-                    <a href="arcade.html" target = "_blank">ARCADE</a>
-                    <a href="crew.html"target = "_blank">CREW</a>
-                    <a href="index.html" class="logo-link">
-                        <img src="logo2.png" alt="Heart & Soul Records Home" class="nav-logo">
-                    </a>
-                    <a href="gallery.html"target = "_blank">GALLERY</a>
-                    <a href="contact us.html"target = "_blank">CONTACT</a>
-                </div>
-            </nav>
-            <div class="glass-container" id="app-interface">
-                <aside class="sidebar">
-                    <div class="brand">
-                        <div class="brand-logo-container">
-                            <img src="logo2.png" alt="Heart & Soul Records" class="sidebar-logo">
-                        </div>
-                    </div>
-                    <div class="search-box">
-                        <input type="text" id="search" placeholder="Search Bangers...">
-                    </div>
-                    <ul id="playlist"></ul>
-                </aside>
-
-                <main class="player-section">
-                    <div class="player-core">
-                        <div class="album-wrapper">
-                            <div class="album-glow"></div>
-                            <img id="album-cover" src="Covers/wise ones.png" alt="Album Art">
-                        </div>
-
-                        <div class="track-info">
-                            <h2 id="track-title">WELCOME TO THE PARTY</h2>
-                            <p class="artist-name">THE WISE ONES</p>
-                        </div>
-
-                        <div class="playback-container">
-                            <div class="time-stamps">
-                                <span id="current-time">0:00</span>
-                                <span id="duration">0:00</span>
-                            </div>
-                            <div class="progress-area" id="progress-bar">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
-
-                        <div class="main-controls">
-                            <button id="shuffle-btn" class="sub-btn">🔀</button>
-                            <button id="prev-btn" class="nav-btn">⏮</button>
-                            <button id="play-pause-btn" class="play-btn">▶</button>
-                            <button id="next-btn" class="nav-btn">⏭</button>
-                            <button id="repeat-btn" class="sub-btn">🔁</button>
-                        </div>
-                    </div>
-                </main>
-            </div>
-        <footer class="arcade-footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <span class="status-light"></span>
-                    <p>SYSTEM STATUS: <span class="neon-text-blue">ONLINE</span></p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart & Soul - Access Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body class="login-body">
+    <!-- Starfield/Particles can render back here -->
+    <div class="login-container">
+        <!-- Pure logo image pulsing using your new blue & yellow animation -->
+        <div class="login-logo-wrapper">
+            <img src="logo.png" alt="Heart & Soul Records" class="sidebar-logo">
+        </div>
+        
+        <div class="terminal-box">
+            <h2 class="terminal-title">SYSTEM ACCESS</h2>
+            <p class="terminal-subtitle">INSERT CREDENTIALS TO INITIALIZE COIN</p>
+            
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="username">OPERATOR ID</label>
+                    <input type="text" id="username" required placeholder="e.g., PLAYER_01" autocomplete="off">
                 </div>
                 
-                <div class="footer-section center">
-                    <p>&copy; 2026 WISE ONES RECORDS // ALL RIGHTS RESERVED</p>
+                <div class="input-group">
+                    <label for="password">ACCESS KEY</label>
+                    <input type="password" id="password" required placeholder="••••••••">
                 </div>
-
-                <div class="footer-section right">
-                    <p>v2.0.4_ARCHIVE</p>
-                </div>
-            </div>
-        </footer>
-
-        <div id="overlay">
-            <button id="start-btn">ENTER THE ARCHIVE</button>
+                
+                <div id="error-msg" class="terminal-error"></div>
+                
+                <button type="submit" class="login-btn">INITIALIZE SYSTEM</button>
+            </form>
         </div>
+    </div>
 
-        <audio id="audio-player"></audio>
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
 
-        <script src="songController.js"></script>
-        <script src="three.js"></script>
-
-        </body>
-    </html>
+            // Set up your gateway credentials here
+            if (user === "ADMIN" && pass === "ARCADE2026") {
+                errorMsg.style.display = "none";
+                // Redirect straight to your music system hub
+                window.location.href = "index.html"; 
+            } else {
+                errorMsg.innerText = "ACCESS DENIED: INVALID KEY IDENTIFIER";
+                errorMsg.style.display = "block";
+                
+                // Shake effect on error
+                const box = document.querySelector('.terminal-box');
+                box.style.animation = 'none';
+                setTimeout(() => box.style.animation = 'terminalShake 0.3s ease', 10);
+            }
+        }
+        window.location.href = "dashboard.html";
+    </script>
+</body>
+</html>
