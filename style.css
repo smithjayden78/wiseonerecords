@@ -25,6 +25,25 @@ body {
     background-size: 100% 4px, 3px 100%;
     padding-bottom: 100px;
 }
+.logo-link {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 100%
+}
+
+.nav-logo {
+    height: 70px; /* Adjust this to change the scale of your heart logo */
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Give it a neon pulse boost when hovered */
+.logo-link:hover .nav-logo {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px var(--neon-pink));
+}
 canvas {
     position: fixed;
     top:0;
@@ -43,12 +62,14 @@ canvas {
 
 .nav-links {
     display: flex;
-    gap: 30px; /* Space between links */
-    background: rgba(0, 0, 0, 0.6);
-    padding: 10px 40px;
-    border-top: 2px solid var(--neon-blue);
-    border-bottom: 2px solid var(--neon-pink);
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    justify-content: center; /* Centers items inside the bar horizontally */
+    align-items: center;     /* CRITICAL: Forces text and logo onto the exact same vertical baseline */
+    gap: 40px;               /* Clean spacing between options */
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px 40px;
+    border-top: 1px solid var(--neon-blue);
+    border-bottom: 1px solid var(--neon-pink);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
 }
 
 .nav-links a {
