@@ -50,8 +50,7 @@
             </button>
         </div>
     </div>
-
-   <script type="module">
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { 
@@ -91,34 +90,31 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            // First: Attempt logging in
+            // Step 1: Try signing in assuming the account has a password set up
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
-                    // Success! Existing user logged in
                     window.location.href = "dashboard.html";
                 })
                 .catch((error) => {
-                    console.log("Firebase caught code:", error.code); // For debugging
+                    console.log("Firebase Error Code:", error.code);
                     
-                    /* If the credentials don't match or the user isn't found, 
-                       Firebase now returns 'auth/invalid-credential'. We intercept this
-                       to automatically CREATE the account on the fly!
-                    */
+                    // Step 2: If login fails, try to automatically register a new account
                     if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
                         
                         createUserWithEmailAndPassword(auth, email, password)
                             .then(() => {
-                                // Success! New account created and logged in automatically
                                 window.location.href = "dashboard.html";
                             })
                             .catch((regError) => {
-                                if (regError.code === 'auth/weak-password') {
+                                console.log("Registration Error Code:", regError.code);
+                                
+                                // Step 3: Catch the exact clash where the email belongs to a Google Account
+                                if (regError.code === 'auth/email-already-in-use') {
+                                    triggerError("LINK DETECTED: PLEASE USE CONNECT GMAIL BUTTON");
+                                } else if (regError.code === 'auth/weak-password') {
                                     triggerError("SECURITY ALERT: PASSWORD TOO WEAK (MIN 6 CHARS)");
-                                } else if (regError.code === 'auth/email-already-in-use') {
-                                    // Handles the scenario where user entered a wrong password for an existing account
-                                    triggerError("ACCESS DENIED: ACCOUNT KEY MISMATCH");
                                 } else {
-                                    triggerError("ACCESS DENIED: CRITICAL SIGN-IN ERROR");
+                                    triggerError("ACCESS DENIED: PASSWORD MISMATCH");
                                 }
                             });
                             
