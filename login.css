@@ -123,3 +123,87 @@
     20%, 60% { transform: translateX(-8px); }
     40%, 80% { transform: translateX(8px); }
 }
+/* Google Login Interactive Button Layout */
+.google-login-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 15px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.25s ease;
+    margin-top: 10px;
+}
+
+.google-login-btn:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+/* Additions for traditional form inputs styling */
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+}
+
+.input-group label {
+    color: var(--neon-blue);
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    background: rgba(5, 5, 10, 0.7);
+    border: 1px solid var(--neon-blue);
+    padding: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+    border-color: #ffeb3b;
+    box-shadow: 0 0 8px rgba(255, 235, 59, 0.3);
+}
+
+/* Retro Cabinet Section Divider */
+.terminal-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+    margin: 20px 0;
+    letter-spacing: 2px;
+}
+
+.terminal-divider::before, .terminal-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.terminal-divider span {
+    padding: 0 10px;
+}
