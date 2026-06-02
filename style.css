@@ -121,10 +121,15 @@ canvas {
 
 /* Sidebar Fixes */
 .sidebar {
-    width: 260px;
+   width: 240px; 
     border-right: 3px solid var(--neon-blue);
     padding: 20px;
-    background: rgba(0, 242, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.4); 
+    height: 100%;        /* Span the full height of the player container */
+    box-sizing: border-box;
+    overflow: hidden;
 }
 .brand h1 { 
     font-size: 1.8rem; 
@@ -150,8 +155,10 @@ canvas {
     list-style: none;
     padding: 0;
     margin: 0;
+    flex: 1;
     overflow-y: auto;
-    overflow-x: hidden; 
+    overflow-x: hidden;
+    padding-right: 5px;
 }
 
 #playlist li {
@@ -178,33 +185,33 @@ canvas {
 
 /* Custom Scrollbar for the Playlist */
 #playlist::-webkit-scrollbar {
-    width: 5px; /* Make it sleek and thin */
+    width: 6px; /* Make it sleek and thin */
 }
 
 /* The Track (background of the scrollbar) */
 #playlist::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    margin: 5px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    border: 1px solid rgba(0, 242, 255, 0.1);
 }
 
 /* The Handle (the part you drag) */
 #playlist::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 10px;
-    box-shadow: 0 0 10px var(--primary); /* Neon glow effect */
+    background: var(--neon-blue);
+    border-radius: 3px;
+    box-shadow: 0 0 8px var(--neon-blue); /* Neon glow effect */
 }
 
 /* Handle on hover */
 #playlist::-webkit-scrollbar-thumb:hover {
-    background: white;
-    box-shadow: 0 0 15px white;
+    background: var(--neon-pink);
+    box-shadow: 0 0 12px var(--neon-pink);
 }
 
 /* Firefox Support */
 #playlist {
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) rgba(255, 255, 255, 0.05);
+    scrollbar-color: var(--neon-blue) rgba(0, 0, 0, 0.05);
 }
 
 /* Player Section */
