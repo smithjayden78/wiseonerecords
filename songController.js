@@ -199,3 +199,24 @@ searchInput.addEventListener('input', (e) => {
         }
     });
 });
+function selectPlayer(cardElement, name, role, desc) {
+    // 1. Find all cards and clear out any old selections
+    const allCards = document.querySelectorAll('.player-card');
+    allCards.forEach(card => {
+        card.classList.remove('selected-fighter');
+    });
+
+    // 2. Add the selected glowing class to the exact card that was clicked
+    cardElement.classList.add('selected-fighter');
+
+    // 3. Swap out the text inside the bio terminal element instantly
+    document.getElementById('bio-name').innerText = name;
+    document.getElementById('bio-role').innerText = role;
+    document.getElementById('bio-desc').innerText = desc;
+
+    // 4. Smoothly trigger your GSAP bounce animation on the text box
+    gsap.fromTo("#bio-box", 
+        { scale: 0.97, opacity: 0.8 }, 
+        { scale: 1, opacity: 1, duration: 0.25, ease: "power2.out" }
+    );
+}

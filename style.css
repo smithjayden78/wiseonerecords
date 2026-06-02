@@ -4,7 +4,7 @@
     --arcade-black: #050505;
     --grid-color: rgba(0, 242, 255, 0.15);
 }
-/* .roster-grid{ 
+ .roster-grid{ 
     display: flex;
     justify-content: center;
     flex-wrap: wrap; 
@@ -12,7 +12,7 @@
     padding: 20px 40px;
     max-width: 1200px;
     margin: 0 auto;
-}*/
+}
 body {
     margin: 0;
     overflow-y:auto;
@@ -473,8 +473,18 @@ canvas {
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+}
+.player-card.selected-fighter {
+    transform: scale(1.06) translateY(-10px); /* Lifts the card upwards slightly */
+    z-index: 5;
 }
 
+/* Give the active frame a stark white focus border and stronger neon bloom */
+.player-card.selected-fighter .card-inner {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 25px #ffffff, 0 0 10px #ffffff;
+}
 .player-card:hover {
     transform: scale(1.05) translateY(-10px);
     z-index: 5;
@@ -523,3 +533,60 @@ canvas {
 .blue-frame .card-label h3 { color: var(--neon-blue); }
 .pink-frame .card-label h3 { color: var(--neon-pink); }
 .purple-frame .card-label h3 { color: #9c27b0; }
+.brand-logo-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 25px;
+    padding-top: 10px;
+}
+
+.sidebar-logo {
+    width: 85%; 
+    max-width: 190px;
+    height: auto;
+    display: inline-block;
+    
+    /* Adds a continuous, subtle retro neon pulse to the image */
+    animation: arcadeMultiColorPulse 1.8s infinite alternate ease-in-out;
+}
+
+/*@keyframes neonPulse {
+    0% {
+        filter: drop-shadow(0 0 4px rgba(0, 242, 255, 0.2));
+    }
+    100% {
+        filter: drop-shadow(0 0 12px var(--neon-pink));
+    }
+}*/
+@keyframes arcadeMultiColorPulse {
+    0% {
+        /* Stage 1: Neon Blue */
+        filter: drop-shadow(0 0 4px var(--neon-blue)) 
+                drop-shadow(0 0 12px rgba(0, 242, 255, 0.6));
+        transform: scale(1);
+    }
+    25% {
+        /* Stage 2: Acid Green */
+        filter: drop-shadow(0 0 5px #39ff14) 
+                drop-shadow(0 0 15px rgba(57, 255, 20, 0.6));
+        transform: scale(1.02);
+    }
+    50% {
+        /* Stage 3: Cyber White Core (Brightest Flash) */
+        filter: drop-shadow(0 0 6px #ffffff) 
+                drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+        transform: scale(1.04);
+    }
+    75% {
+        /* Stage 4: Electric Orange */
+        filter: drop-shadow(0 0 5px #ff6600) 
+                drop-shadow(0 0 15px rgba(255, 102, 0, 0.6));
+        transform: scale(1.02);
+    }
+    100% {
+        /* Stage 5: Arcade Yellow */
+        filter: drop-shadow(0 0 4px #ffeb3b) 
+                drop-shadow(0 0 12px rgba(255, 235, 59, 0.6));
+        transform: scale(1);
+    }
+}
