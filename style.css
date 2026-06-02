@@ -559,34 +559,40 @@ canvas {
     }
 }*/
 @keyframes arcadeMultiColorPulse {
-    0% {
-        /* Stage 1: Neon Blue */
-        filter: drop-shadow(0 0 4px var(--neon-blue)) 
-                drop-shadow(0 0 12px rgba(0, 242, 255, 0.6));
+   0% {
+        /* Rest State: Deeper Neon Blue */
         transform: scale(1);
+        filter: drop-shadow(0 0 5px var(--neon-blue)) 
+                drop-shadow(0 0 12px rgba(0, 242, 255, 0.5));
     }
-    25% {
-        /* Stage 2: Acid Green */
-        filter: drop-shadow(0 0 5px #39ff14) 
-                drop-shadow(0 0 15px rgba(57, 255, 20, 0.6));
+    18% {
+        /* Primary Compression Phase (The 'Lub') */
+        transform: scale(0.96);
+        filter: drop-shadow(0 0 4px var(--neon-blue)) 
+                drop-shadow(0 0 10px rgba(0, 242, 255, 0.4));
+    }
+    32% {
+        /* Explosive Expansion Phase (The 'Dub') - Flares into Yellow */
         transform: scale(1.02);
+        filter: drop-shadow(0 0 8px #ffeb3b) 
+                drop-shadow(0 0 22px rgba(255, 235, 59, 0.85));
     }
     50% {
-        /* Stage 3: Cyber White Core (Brightest Flash) */
-        filter: drop-shadow(0 0 6px #ffffff) 
-                drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
-        transform: scale(1.04);
+        /* Secondary Echo Snapback */
+        transform: scale(1.01);
+        filter: drop-shadow(0 0 6px #ffeb3b) 
+                drop-shadow(0 0 15px rgba(255, 235, 59, 0.6));
     }
-    75% {
-        /* Stage 4: Electric Orange */
-        filter: drop-shadow(0 0 5px #ff6600) 
-                drop-shadow(0 0 15px rgba(255, 102, 0, 0.6));
-        transform: scale(1.02);
+    68% {
+        /* Smooth color slide back to baseline */
+        transform: scale(1.03);
+        filter: drop-shadow(0 0 7px var(--neon-blue)) 
+                drop-shadow(0 0 16px rgba(0, 242, 255, 0.6));
     }
     100% {
-        /* Stage 5: Arcade Yellow */
-        filter: drop-shadow(0 0 4px #ffeb3b) 
-                drop-shadow(0 0 12px rgba(255, 235, 59, 0.6));
+        /* Matches 0% perfectly to prevent frame clipping */
         transform: scale(1);
+        filter: drop-shadow(0 0 5px var(--neon-blue)) 
+                drop-shadow(0 0 12px rgba(0, 242, 255, 0.5));
     }
 }
