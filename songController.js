@@ -48,7 +48,6 @@ function updatePlaylistUI() {
     document.querySelectorAll('#playlist li').forEach((li, i) => {
         if (i === trackIndex) {
             li.classList.add('active');
-            // GSAP pulse for a little extra professional polish
             gsap.to(li, { x: 10, duration: 0.3 });
         } else {
             li.classList.remove('active');
@@ -79,11 +78,13 @@ function nextTrack() {
             let newIndex;
             do {
                 newIndex = Math.floor(Math.random() * playlist.length);
-            } while (newIndex === trackIndex && playlist.length > 1);
+            } 
+            while (newIndex === trackIndex && playlist.length > 1);
             trackIndex = newIndex;
-        } else {
+            } 
+            else {
             trackIndex = (trackIndex + 1) % playlist.length;
-        }
+            }
         loadTrack(trackIndex);
         playTrack();
     }
