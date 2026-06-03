@@ -1,14 +1,24 @@
-/* Core layout for full window centering */
+/* ==========================================================================
+   1. CORE CONTAINER ENGINE (Fits any screen viewport)
+   ========================================================================== */
+:root {
+    --neon-blue: #00f2ff;
+    --arcade-yellow: #ffeb3b;
+}
+
 .login-body {
     background-color: #05050a;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100vh;
+    /* Using min-height over height prevents clipping on mobile when keyboard pushes up */
+    min-height: -webkit-fill-available; 
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Courier New', Courier, monospace;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .login-container {
@@ -17,29 +27,38 @@
     align-items: center;
     gap: 15px;
     width: 100%;
-    max-width: 420px;
-    padding: 20px;
+    /* Hard boundaries preventing the cabinet from stretching too wide on desktop */
+    max-width: 420px; 
+    /* Essential padding safeguard for tiny displays */
+    padding: 16px; 
+    box-sizing: border-box;
 }
 
 .login-logo-wrapper {
-    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
 }
 
-/* The Retro Console Container Box */
+/* ==========================================================================
+   2. TERMINAL CABINET BOX
+   ========================================================================== */
 .terminal-box {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9);
     border: 2px solid var(--neon-blue);
-    padding: 30px;
+    padding: 25px 20px;
     width: 100%;
     box-sizing: border-box;
     box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
     position: relative;
+    border-radius: 4px;
 }
 
 .terminal-title {
-    color: #ffeb3b; /* Arcade Yellow */
-    margin: 0 0 5px 0;
-    font-size: 1.5rem;
+    color: var(--arcade-yellow);
+    margin: 0 0 6px 0;
+    font-size: 1.4rem; /* Scaled down slightly to fit small screens without breaking lines */
     letter-spacing: 2px;
     text-align: center;
     text-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
@@ -47,117 +66,19 @@
 
 .terminal-subtitle {
     color: #ffffff;
-    font-size: 0.75rem;
-    margin: 0 0 25px 0;
+    font-size: 0.72rem;
+    margin: 0 0 20px 0;
     text-align: center;
     opacity: 0.7;
     letter-spacing: 1px;
+    line-height: 1.4;
 }
 
-/* Inputs styling matching your search component */
+/* ==========================================================================
+   3. RESPONSIVE FORM ELEMENTS & INTERACTION (Touch Optimized)
+   ========================================================================== */
 .input-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.input-group label {
-    color: var(--neon-blue);
-    font-size: 0.8rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.input-group input {
-    background: rgba(5, 5, 10, 0.6);
-    border: 1px solid var(--neon-blue);
-    padding: 12px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 0.9rem;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.input-group input:focus {
-    border-color: #ffeb3b;
-    box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);
-}
-
-/* Error layout styling */
-.terminal-error {
-    color: #ff3333;
-    font-size: 0.75rem;
-    margin-bottom: 15px;
-    text-align: center;
-    display: none;
-    font-weight: bold;
-}
-
-/* Arcade Action Button */
-.login-btn {
-    width: 100%;
-    background: transparent;
-    border: 2px solid #ffeb3b;
-    color: #ffeb3b;
-    padding: 14px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.2s ease;
-    margin-top: 10px;
-}
-
-.login-btn:hover {
-    background: #ffeb3b;
-    color: #000;
-    box-shadow: 0 0 15px #ffeb3b;
-}
-
-/* Error feedback motion */
-@keyframes terminalShake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-8px); }
-    40%, 80% { transform: translateX(8px); }
-}
-/* Google Login Interactive Button Layout */
-.google-login-btn {
-    width: 100%;
-    background: transparent;
-    border: 2px solid var(--neon-blue);
-    color: var(--neon-blue);
-    padding: 15px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: all 0.25s ease;
-    margin-top: 10px;
-}
-
-.google-login-btn:hover {
-    background: #ffffff;
-    color: #000000;
-    border-color: #ffffff;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-}
-
-.google-icon {
-    width: 20px;
-    height: 20px;
-    display: block;
-}
-/* Additions for traditional form inputs styling */
-.input-group {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -174,36 +95,120 @@
 .input-group input {
     background: rgba(5, 5, 10, 0.7);
     border: 1px solid var(--neon-blue);
-    padding: 10px;
+    padding: 12px; /* Thicker touch targets for mobile thumbs */
     color: #fff;
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 1rem; /* Essential: Setting font-size to 1rem/16px prevents iOS from zooming in automatically on focus */
     outline: none;
+    border-radius: 0;
+    -webkit-appearance: none; /* Removes forced default iOS input styling shadow */
+    appearance: none;
     transition: all 0.2s ease;
 }
 
 .input-group input:focus {
-    border-color: #ffeb3b;
+    border-color: var(--arcade-yellow);
     box-shadow: 0 0 8px rgba(255, 235, 59, 0.3);
 }
 
-/* Retro Cabinet Section Divider */
+/* Action Buttons Grid */
+.login-btn, .google-login-btn {
+    width: 100%;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    /* Minimum height rule for mobile touch guidelines */
+    min-height: 48px; 
+    transition: all 0.25s ease;
+}
+
+.login-btn {
+    border: 2px solid var(--arcade-yellow);
+    color: var(--arcade-yellow);
+}
+
+.login-btn:hover, .login-btn:active {
+    background: var(--arcade-yellow);
+    color: #000;
+    box-shadow: 0 0 15px var(--arcade-yellow);
+}
+
+.google-login-btn {
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+}
+
+.google-login-btn:hover, .google-login-btn:active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.google-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0; /* Prevents icon from crushing out of aspect ratio if text wraps */
+}
+
+/* Layout Divider */
 .terminal-divider {
     display: flex;
     align-items: center;
     text-align: center;
     color: rgba(255, 255, 255, 0.3);
-    font-size: 0.75rem;
-    margin: 20px 0;
+    font-size: 0.7rem;
+    margin: 18px 0;
     letter-spacing: 2px;
 }
 
 .terminal-divider::before, .terminal-divider::after {
     content: '';
     flex: 1;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .terminal-divider span {
     padding: 0 10px;
+}
+
+.terminal-error {
+    color: #ff3333;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    text-align: center;
+    display: none;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   4. MICRO MEDIA BREAKPOINTS (For ultra-small / old phone screens)
+   ========================================================================== */
+@media (max-width: 360px) {
+    .terminal-box {
+        padding: 20px 15px;
+    }
+    .terminal-title {
+        font-size: 1.2rem;
+    }
+    .login-btn, .google-login-btn {
+        font-size: 0.85rem;
+    }
+}
+
+/* Dynamic Shake Motion Framework */
+@keyframes terminalShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
