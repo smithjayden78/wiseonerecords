@@ -235,3 +235,30 @@ body, .login-body {
     20%, 60% { transform: translateX(-6px); }
     40%, 80% { transform: translateX(6px); }
 }
+/* Position the toggle button neatly inside the box */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--neon-blue);
+    font-size: 1.1rem;
+    user-select: none;
+    z-index: 5; /* Sits above the input box background, but below the floating label */
+    opacity: 0.6;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+/* Hover effect to show it's clickable */
+.password-toggle:hover {
+    opacity: 1;
+    color: var(--neon-pink);
+}
+
+/* IMPORTANT: Adjust the padding-right on your password input 
+   so text never types underneath or overlaps the eye icon */
+.input-group input[type="password"],
+.input-group input[type="text"] {
+    padding-right: 45px !important;
+}

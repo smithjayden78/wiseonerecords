@@ -10,6 +10,8 @@ const playlistElement = document.getElementById('playlist');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const repeatBtn = document.getElementById('repeat-btn');
 const searchInput = document.getElementById('search');
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('togglePassword');
 
 let trackIndex = 0;
 let isShuffle = false;
@@ -220,3 +222,22 @@ function selectPlayer(cardElement, name, role, desc) {
         { scale: 1, opacity: 1, duration: 0.25, ease: "power2.out" }
     );
 }
+
+togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    // This dynamically swaps the vector icon name inside the <i> tag
+    const icon = this.querySelector('i');
+    if (type === 'password') {
+        icon.setAttribute('data-lucide', 'eye');
+    } else {
+        icon.setAttribute('data-lucide', 'eye-off');
+    }
+    
+    // This forces Lucide to redraw the new icon instantly
+    lucide.createIcons();
+});
+
+// Run once on page load to initialize the original eye graphic
+lucide.createIcons();
