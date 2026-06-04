@@ -596,3 +596,27 @@ canvas {
                 drop-shadow(0 0 12px rgba(0, 242, 255, 0.5));
     }
 }
+.terminal-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000000;
+    border: 2px solid #00ffff; /* Signature neon cyan border */
+    padding: 15px 25px;
+    border-radius: 4px;
+    z-index: 9999;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 1px;
+}
+
+.toast-content {
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.toast-prompt {
+    color: #888888;
+    margin-right: 5px;
+}

@@ -182,7 +182,7 @@ window.handleUsernameSave = async function(event) {
             username: usernameValue,
             email: currentUser.email
         }, { merge: true });
-
+        localStorage.setItem('isNewUser', 'true')
         // 4. Save locally and launch the game!
         localStorage.setItem('userTag', usernameValue);
         window.location.href = "dashboard.html";
