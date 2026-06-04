@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Check condition: New User vs Returning User
         if (isNewUser === 'true') {
             // High-energy welcome for first-timers!
-            greetingString = `Hello ${savedTag.toUpperCase()}. Welcome to the Party !`;
+            greetingString = `WhatsUp ${savedTag.toUpperCase()}.WELCOME TO THE PARTY !`;
             
             // Wipe the flag immediately so it doesn't trigger on next load
             localStorage.removeItem('isNewUser');
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else if (currentHour >= 12 && currentHour < 17) {
                 greetingString = `Good afternoon ${savedTag.toUpperCase()}, stream online.`;
             } else {
-                greetingString = `Good evening ${savedTag.toUpperCase()}, welcome back.`;
+                greetingString = `Good evening ${savedTag.toUpperCase()}, WELCOME BACK TO THE PARTY !`;
             }
         }
 
@@ -44,6 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => {
                 welcomePopup.style.display = "none";
             }, 500);
-        }, 4000);
+        }, 5000);
     }
 });

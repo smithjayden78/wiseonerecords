@@ -602,7 +602,8 @@ canvas {
     left: 50%;
     transform: translateX(-50%);
     background-color: #000000;
-    border: 2px solid #00ffff; /* Signature neon cyan border */
+    border: 2px solid; /* Signature neon cyan border */
+    border-color: var(--neon-pink);
     padding: 15px 25px;
     border-radius: 4px;
     z-index: 9999;
