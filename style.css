@@ -208,11 +208,124 @@ canvas {
     font-weight: bold;
     text-transform: uppercase;
     transition: 0.2s;
+    
+    /* NEW LAYOUT RULES ADDED HERE 🌟 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative !important;
+    padding-right: 15px;
+    overflow: visible !important;
+}
+
+/* NEW MENU ELEMENTS (Paste these directly below the merged li rule) */
+.menu-dots-btn {
+    background: none;
+    border: none;
+    color: #00ffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 0 5px;
+}
+
+.menu-dots-btn:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px #00ffff;
+}
+/* ==========================================================================
+   FORCE DOTS TO BE VISIBLE AND GLOW ON ROW HOVER
+   ========================================================================== */
+#playlist li:hover .menu-dots-btn {
+    color: #000000 !important; /* Force them back to solid electric cyan */
+    opacity: 1 !important;     /* Make sure they don't fade out */
+    text-shadow: none !important;
+}
+
+/* If the row is the active pink song, make the dots turn pink on hover too! */
+#playlist li.active:hover .menu-dots-btn {
+    color: #000000 !important; /* Signature neon pink */
+    text-shadow: none !important;
+}
+
+/* ==========================================================================
+   ARCADE YELLOW CONTEXT DROPDOWN MENU 🕹️
+   ========================================================================== */
+
+/* The main container box */
+/* ==========================================================================
+   CLEAN NEON BLUE CONTEXT DROPDOWN MENU (SINGLE BORDER + HOVER GROW) 🌐
+   ========================================================================== */
+
+/* The main container box */
+#playlist li .song-context-menu {
+    display: none; /* Controlled via JS toggles */
+    position: absolute;
+    right: 15px;
+    top: 95%; /* Pushes it clearly below the current row */
+    
+    /* Solid background to completely hide elements behind it */
+    background: var(--neon-blue) !important;
+    background-color: var(--neon-blue) !important;
+    
+    /* Clean single black border layout 
+    border: 2px solid #000000 !important;
+    border-radius: 0px !important;*/
+    
+    /* Force this window to sit in front of ALL other elements */
+    z-index: 999999 !important;
+   /* box-shadow: 0 0 20px rgba(0, 251, 255, 0.9) !important;*/
+    
+    flex-direction: column;
+    min-width: 150px;
+    padding: 0px !important; /* Removed padding to get rid of the outer border gap */
+    pointer-events: auto !important;
+}
+
+/* Base button styling inside the menu */
+#playlist li .song-context-menu button {
+    display: block !important;
+    width: 100% !important;
+    background: var(--neon-blue) !important;
+    background-color: var(--neon-blue) !important;
+    color: #000000 !important;
+    
+    /* ❌ REMOVED: No borders or margins here anymore to avoid the double border bug */
+    border: 1px solid !important;
+    margin: 0 !important;
+    
+    padding: 12px 14px !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 0.85rem !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    
+    /* Smooth transition for the scaling effect */
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out !important;
+    transform-origin: left center; /* Ensures text expands cleanly outward to the right */
+}
+
+/* Between-button divider line: adds a single clean separator instead of a double box */
+#playlist li .song-context-menu button:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 🔥 THE GROW HOVER EFFECT:
+   Inverts the background color slightly to stand out and scales up the button text size! */
+#playlist li .song-context-menu button:hover {
+    background: #00e5ff !important; /* Slightly brighter blue variant on hover */
+    background-color: #00e5ff !important;
+    color: #000000 !important;
+    
+    /* Scale effect to increase text size smoothly */
+    transform: scale(1.06) !important;
 }
 
 #playlist li:hover {
     background: var(--neon-blue);
-    color: #000;
+    color: #000000;
 }
 
 #playlist li.active { 
@@ -425,12 +538,6 @@ canvas {
         display: none; /* Hide version on mobile to save space */
     }
 }
-
-
-
-
-
-
 /* Crew Specific Styles */
 .selection-container {
     max-width: 1000px;

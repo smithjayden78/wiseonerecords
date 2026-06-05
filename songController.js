@@ -11,10 +11,7 @@ const playlistElement = document.getElementById('playlist');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const repeatBtn = document.getElementById('repeat-btn');
 const searchInput = document.getElementById('search');
-const passwordInput = document.getElementById('password');
-const togglePassword = document.getElementById('togglePassword');
 
-let trackIndex = 0;
 let isShuffle = false;
 let isRepeat = false;
 
@@ -39,96 +36,260 @@ const playlist = [
     { title: "Gypsy", file: "Bangers/Gypsy.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
 ];
 
-function loadTrack(index) {
-    const track = playlist[index];
-    trackTitle.innerText = track.title;
-    albumCover.src = track.image;
-    audio.src = track.file;
-    updatePlaylistUI();
-    gsap.fromTo("#app-interface", { filter: "hue-rotate(90deg) brightness(2)" }, { filter: "hue-rotate(0deg) brightness(1)", duration: 0.2 });
+// ==========================================================================
+// DYNAMIC QUEUE ENGINE
+// ==========================================================================
+// This array tracks the files actively chosen to play next in runtime sequence
+let playbackQueue = []; 
+
+function loadTrackFromQueue() {
+    if (playbackQueue.length === 0) return;
+    
+    const currentTrack = playbackQueue[0];
+    trackTitle.innerText = currentTrack.title;
+    albumCover.src = currentTrack.image;
+    audio.src = currentTrack.file;
+    updatePlaylistUI(currentTrack.title);
+    
+    if (typeof gsap !== 'undefined') {
+        gsap.fromTo("#app-interface", { filter: "hue-rotate(90deg) brightness(2)" }, { filter: "hue-rotate(0deg) brightness(1)", duration: 0.2 });
+    }
 }
 
-function updatePlaylistUI() {
-    document.querySelectorAll('#playlist li').forEach((li, i) => {
-        if (i === trackIndex) {
+function updatePlaylistUI(activeTitle) {
+    if (!activeTitle) return;
+
+    document.querySelectorAll('#playlist li').forEach((li) => {
+        // 1. Grab the text and safely clean it up
+        const rowTitle = li.querySelector('.song-title-text')?.innerText.toLowerCase().trim() || "";
+        const cleanActiveTitle = activeTitle.toLowerCase().trim();
+
+        // 2. Perform a safe, case-insensitive match 🌟
+        if (rowTitle === cleanActiveTitle) {
             li.classList.add('active');
-            gsap.to(li, { x: 10, duration: 0.3 });
+            if (typeof gsap !== 'undefined') gsap.to(li, { x: 10, duration: 0.3 });
         } else {
             li.classList.remove('active');
-            gsap.to(li, { x: 0, duration: 0.3 });
+            if (typeof gsap !== 'undefined') gsap.to(li, { x: 0, duration: 0.3 });
         }
     });
 }
 
 function playTrack() {
+    if (!audio.src) return;
     audio.play();
-    playPauseBtn.innerText = "⏸";
-    gsap.to(albumCover, { scale: 1.05, duration: 0.5 });
+    if (playPauseBtn) playPauseBtn.innerText = "⏸";
+    if (typeof gsap !== 'undefined') gsap.to(albumCover, { scale: 1.05, duration: 0.5 });
 }
 
 function pauseTrack() {
     audio.pause();
-    playPauseBtn.innerText = "▶";
-    gsap.to(albumCover, { scale: 1, duration: 0.5 });
+    if (playPauseBtn) playPauseBtn.innerText = "▶";
+    if (typeof gsap !== 'undefined') gsap.to(albumCover, { scale: 1, duration: 0.5 });
 }
 
 // Next Track Logic
+// Next Track Logic (Fixed Navigation Engine)
 function nextTrack() {
     if (isRepeat) {
         audio.currentTime = 0;
         playTrack();
+        return;
+    }
+
+    // 1. If there's an explicit user queue, handle shifting it out
+    if (playbackQueue.length > 1) {
+        playbackQueue.shift();
+        // The new index 0 is our next queued song, so find where it sits in the master playlist array
+        const nextTrackData = playbackQueue[0];
+        trackIndex = playlist.findIndex(t => t.title === nextTrackData.title);
+        if (trackIndex === -1) trackIndex = 0; 
     } else {
+        // 2. Default behavior: advance normal indexing through the master playlist
         if (isShuffle) {
             let newIndex;
             do {
                 newIndex = Math.floor(Math.random() * playlist.length);
-            } 
-            while (newIndex === trackIndex && playlist.length > 1);
+            } while (newIndex === trackIndex && playlist.length > 1);
             trackIndex = newIndex;
-            } 
-            else {
+        } else {
             trackIndex = (trackIndex + 1) % playlist.length;
-            }
-        loadTrack(trackIndex);
-        playTrack();
+        }
+        // Set up the playback queue to mirror the newly advanced index item
+        playbackQueue = [playlist[trackIndex]];
     }
-}
 
-// Previous Track Logic
-function prevTrack() {
-    trackIndex = (trackIndex - 1 + playlist.length) % playlist.length;
-    loadTrack(trackIndex);
+    loadTrackFromQueue();
     playTrack();
 }
 
-// AUTO-PLAY NEXT SONG (With safety guard)
-if (audio) {
-    audio.onended = () => {
-        nextTrack();
-    };
-} else {
-    console.warn("Audio element not initialized yet. Check your HTML ID!");
+// Previous Track Logic (Fixed Navigation Engine)
+function prevTrack() {
+    // If the song is already well underway, a back click should just restart the current track
+    if (audio.currentTime > 3) {
+        audio.currentTime = 0;
+        playTrack();
+        return;
+    }
+
+    // Otherwise, step backward cleanly through the master track index
+    if (isShuffle) {
+        trackIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+        trackIndex = (trackIndex - 1 + playlist.length) % playlist.length;
+    }
+
+    // Reset the manual queue context over the previous historical tracker target
+    playbackQueue = [playlist[trackIndex]];
+    loadTrackFromQueue();
+    playTrack();
 }
-// PLAY / PAUSE BUTTON (Added safety guard)
-if (playPauseBtn) {
-    playPauseBtn.onclick = () => {
-        audio.paused ? playTrack() : pauseTrack();
-    };
-} else {
-    console.warn("Could not find playPauseBtn element on the page. Check id='play-pause-btn' in your HTML!");
+// Context Menu Helper Functions
+function addPlayNext(track) {
+    if (playbackQueue.length === 0) {
+        playbackQueue.push(track);
+        loadTrackFromQueue();
+        playTrack();
+    } else {
+        // Insert directly at index 1 (underneath index 0, which is currently streaming)
+        playbackQueue.splice(1, 0, track);
+    }
 }
 
-// Progress Bar Logic
+function addQueueEnd(track) {
+    if (playbackQueue.length === 0) {
+        playbackQueue.push(track);
+        loadTrackFromQueue();
+        playTrack();
+    } else {
+        // Append smoothly to the end of the existing chain array
+        playbackQueue.push(track);
+    }
+}
+
+// ==========================================================================
+// COMPONENT INTERFACE RENDERING ENGINE
+// ==========================================================================
+function renderPlaylist() {
+    playlistElement.innerHTML = "";
+    playlist.forEach((track) => {
+        const li = document.createElement('li');
+        
+        // 1. Create a dedicated span for the title text and give it the correct class 🌟
+        const titleSpan = document.createElement('span');
+        titleSpan.className = "song-title-text"; 
+        titleSpan.innerText = track.title;
+        
+        // Move your base click behavior to the title span
+        titleSpan.onclick = () => { 
+            trackIndex = playlist.findIndex(t => t.title === track.title);
+            playbackQueue = [track];
+            loadTrackFromQueue(); 
+            playTrack(); 
+        };
+        
+        // 2. Action Dropdown Activation Button frame
+        const dotsBtn = document.createElement('button');
+        dotsBtn.className = "menu-dots-btn";
+        dotsBtn.innerText = "⋮";
+        
+        // Sub-menu frame elements
+        const menuDiv = document.createElement('div');
+        menuDiv.className = "song-context-menu";
+        
+        const nextBtnOpt = document.createElement('button');
+        nextBtnOpt.innerText = "Play Next";
+        nextBtnOpt.onclick = (e) => {
+            e.stopPropagation();
+            addPlayNext(track);
+            menuDiv.style.display = "none";
+        };
+        
+        const queueBtnOpt = document.createElement('button');
+        queueBtnOpt.innerText = "Add to Queue";
+        queueBtnOpt.onclick = (e) => {
+            e.stopPropagation();
+            addQueueEnd(track);
+            menuDiv.style.display = "none";
+        };
+        
+        menuDiv.appendChild(nextBtnOpt);
+        menuDiv.appendChild(queueBtnOpt);
+        
+        dotsBtn.onclick = (e) => {
+            e.stopPropagation();
+            
+            // Check if this specific menu is currently open
+            const isAlreadyOpen = menuDiv.style.display === "flex";
+            
+            // First, close all menus and completely restore baseline pointer behaviors across the app
+            document.querySelectorAll('.song-context-menu').forEach(menu => {
+                menu.style.display = 'none';
+                menu.parentElement.style.zIndex = ""; 
+            });
+            document.querySelectorAll('#playlist li').forEach(row => {
+                row.style.pointerEvents = "auto"; 
+                row.style.zIndex = "";
+            });
+
+            // If it wasn't open, let's open it cleanly
+            if (!isAlreadyOpen) {
+                menuDiv.style.display = "flex";
+                
+                // 1. Force the current active parent row to the top of the stack pile
+                li.style.zIndex = "99999";
+                
+                // 2. CRITICAL: Freeze interaction tracking on ALL OTHER list items 
+                // so they can't fire hover animations beneath the menu panel! 🌟
+                document.querySelectorAll('#playlist li').forEach(row => {
+                    if (row !== li) {
+                        row.style.pointerEvents = "none";
+                        row.style.zIndex = "1"; // Push down below our active layer
+                    }
+                });
+            }
+        };
+
+        // Append everything in order
+        li.appendChild(titleSpan);
+        li.appendChild(dotsBtn);
+        li.appendChild(menuDiv);
+        playlistElement.appendChild(li);
+    });
+}
+
+// Global click escape guard to reset state cleanly
+document.addEventListener('click', () => {
+    document.querySelectorAll('.song-context-menu').forEach(menu => {
+        menu.style.display = 'none';
+    });
+    document.querySelectorAll('#playlist li').forEach(row => {
+        row.style.pointerEvents = "auto";
+        row.style.zIndex = "";
+    });
+});
+
+// ==========================================================================
+// CORE DEVICE COMPONENT EVENT ATTACHMENTS
+// ==========================================================================
+if (audio) {
+    audio.onended = () => { nextTrack(); };
+}
+
+if (playPauseBtn) {
+    playPauseBtn.onclick = () => { audio.paused ? playTrack() : pauseTrack(); };
+}
+
 audio.ontimeupdate = (e) => {
     const { duration, currentTime } = e.srcElement;
     if (duration) {
         const progressPercent = (currentTime / duration) * 100;
-        progressBar.style.width = `${progressPercent}%`;
+        if (progressBar) progressBar.style.width = `${progressPercent}%`;
 
         let curM = Math.floor(currentTime / 60);
         let curS = Math.floor(currentTime % 60);
         if(curS < 10) curS = `0${curS}`;
-        currentTimeEl.innerText = `${curM}:${curS}`;
+        if (currentTimeEl) currentTimeEl.innerText = `${curM}:${curS}`;
     }
 };
 
@@ -136,118 +297,82 @@ audio.onloadeddata = () => {
     let durM = Math.floor(audio.duration / 60);
     let durS = Math.floor(audio.duration % 60);
     if(durS < 10) durS = `0${durS}`;
-    durationEl.innerText = `${durM}:${durS}`;
+    if (durationEl) durationEl.innerText = `${durM}:${durS}`;
 };
 
-progressArea.onclick = (e) => {
-    let width = progressArea.clientWidth;
-    let clickX = e.offsetX;
-    audio.currentTime = (clickX / width) * audio.duration;
-};
+if (progressArea) {
+    progressArea.onclick = (e) => {
+        let width = progressArea.clientWidth;
+        let clickX = e.offsetX;
+        audio.currentTime = (clickX / width) * audio.duration;
+    };
+}
 
-// Controls
-document.getElementById('next-btn').onclick = nextTrack;
-document.getElementById('prev-btn').onclick = prevTrack;
+const nextBtn = document.getElementById('next-btn');
+if (nextBtn) nextBtn.onclick = nextTrack;
 
-shuffleBtn.onclick = () => {
-    isShuffle = !isShuffle;
-    shuffleBtn.style.color = isShuffle ? "#bb86fc" : "white";
-    shuffleBtn.style.opacity = isShuffle ? "1" : "0.4";
-};
+const prevBtn = document.getElementById('prev-btn');
+if (prevBtn) prevBtn.onclick = prevTrack;
 
-repeatBtn.onclick = () => {
-    isRepeat = !isRepeat;
-    repeatBtn.style.color = isRepeat ? "#bb86fc" : "white";
-    repeatBtn.style.opacity = isRepeat ? "1" : "0.4";
-};
+if (shuffleBtn) {
+    shuffleBtn.onclick = () => {
+        isShuffle = !isShuffle;
+        shuffleBtn.style.color = isShuffle ? "#bb86fc" : "white";
+        shuffleBtn.style.opacity = isShuffle ? "1" : "0.4";
+    };
+}
+
+if (repeatBtn) {
+    repeatBtn.onclick = () => {
+        isRepeat = !isRepeat;
+        repeatBtn.style.color = isRepeat ? "#bb86fc" : "white";
+        repeatBtn.style.opacity = isRepeat ? "1" : "0.4";
+    };
+}
 
 document.getElementById('start-btn').onclick = () => {
-    gsap.to("#start-btn", { scale: 0, opacity: 0, duration: 2});
-    
-    gsap.to("#overlay", { 
-        opacity: 0, 
-        duration: 1.5, 
-        onComplete: () => {
-            document.getElementById('overlay').style.display = 'none';
-            const app = document.getElementById('app-interface');
-            app.style.opacity = '1';
-            // Trigger the initial load
-            renderPlaylist();
-            loadTrack(trackIndex);
-            playTrack();
-        }
-    });
+    if (typeof gsap !== 'undefined') {
+        gsap.to("#start-btn", { scale: 0, opacity: 0, duration: 2});
+        
+        gsap.to("#overlay", { 
+            opacity: 0, 
+            duration: 1.5, 
+            onComplete: () => {
+                const overlayEl = document.getElementById('overlay');
+                if (overlayEl) overlayEl.style.display = 'none';
+                const app = document.getElementById('app-interface');
+                if (app) app.style.opacity = '1';
+                
+                // 1. Render out the visual rows
+                renderPlaylist();
+                
+                // 2. Set your baseline tracking index explicitly to 0 🌟
+                trackIndex = 0;
+                
+                // 3. Initialize your dynamic queue with the first song item cleanly
+                playbackQueue = [playlist[trackIndex]];
+                
+                // 4. Trigger the layout sync and play the audio pipeline streams
+                loadTrackFromQueue();
+                playTrack();
+            }
+        });
+    }
 };
 
-function renderPlaylist() {
-    playlistElement.innerHTML = "";
-    playlist.forEach((track, i) => {
-        const li = document.createElement('li');
-        li.innerText = track.title;
-        li.onclick = () => { 
-            trackIndex = i; 
-            loadTrack(i); 
-            playTrack(); 
-        };
-        playlistElement.appendChild(li);
-    });
-}
-searchInput.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase().trim();
-    const playlistItems = document.querySelectorAll('#playlist li');
-    
-    playlistItems.forEach((item) => {
-        // Reads the exact text displaying on the screen for this song row
-        const itemText = item.innerText.toLowerCase();
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const playlistItems = document.querySelectorAll('#playlist li');
         
-        // If the text matches your search query, keep it visible
-        if (itemText.includes(searchTerm)) {
-            // Restore your clean neon border layout style
-            item.style.display = ''; 
-        } else {
-            // Hide the rows that don't match
-            item.style.display = 'none';  
-        }
+        playlistItems.forEach((item) => {
+            const itemText = item.querySelector('.song-title-text')?.innerText.toLowerCase() || "";
+            if (itemText.includes(searchTerm)) {
+                item.style.display = ''; 
+            } else {
+                item.style.display = 'none';  
+            }
+        });
     });
-});
-function selectPlayer(cardElement, name, role, desc) {
-    // 1. Find all cards and clear out any old selections
-    const allCards = document.querySelectorAll('.player-card');
-    allCards.forEach(card => {
-        card.classList.remove('selected-fighter');
-    });
-
-    // 2. Add the selected glowing class to the exact card that was clicked
-    cardElement.classList.add('selected-fighter');
-
-    // 3. Swap out the text inside the bio terminal element instantly
-    document.getElementById('bio-name').innerText = name;
-    document.getElementById('bio-role').innerText = role;
-    document.getElementById('bio-desc').innerText = desc;
-
-    // 4. Smoothly trigger your GSAP bounce animation on the text box
-    gsap.fromTo("#bio-box", 
-        { scale: 0.97, opacity: 0.8 }, 
-        { scale: 1, opacity: 1, duration: 0.25, ease: "power2.out" }
-    );
 }
-
-togglePassword.addEventListener('click', function () {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    
-    // This dynamically swaps the vector icon name inside the <i> tag
-    const icon = this.querySelector('i');
-    if (type === 'password') {
-        icon.setAttribute('data-lucide', 'eye');
-    } else {
-        icon.setAttribute('data-lucide', 'eye-off');
-    }
-    
-    // This forces Lucide to redraw the new icon instantly
-    lucide.createIcons();
-});
-
-// Run once on page load to initialize the original eye graphic
-lucide.createIcons();
 });
