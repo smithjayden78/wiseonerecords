@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", function(){
 const audio = document.getElementById('audio-player');
 const trackTitle = document.getElementById('track-title');
 const albumCover = document.getElementById('album-cover');
@@ -100,14 +101,22 @@ function prevTrack() {
     playTrack();
 }
 
-// AUTO-PLAY NEXT SONG
-audio.onended = () => {
-    nextTrack();
-};
-
-playPauseBtn.onclick = () => {
-    audio.paused ? playTrack() : pauseTrack();
-};
+// AUTO-PLAY NEXT SONG (With safety guard)
+if (audio) {
+    audio.onended = () => {
+        nextTrack();
+    };
+} else {
+    console.warn("Audio element not initialized yet. Check your HTML ID!");
+}
+// PLAY / PAUSE BUTTON (Added safety guard)
+if (playPauseBtn) {
+    playPauseBtn.onclick = () => {
+        audio.paused ? playTrack() : pauseTrack();
+    };
+} else {
+    console.warn("Could not find playPauseBtn element on the page. Check id='play-pause-btn' in your HTML!");
+}
 
 // Progress Bar Logic
 audio.ontimeupdate = (e) => {
@@ -153,7 +162,7 @@ repeatBtn.onclick = () => {
 };
 
 document.getElementById('start-btn').onclick = () => {
-    gsap.to("#start-btn", { scale: 0, opacity: 0, duration: 0.5 });
+    gsap.to("#start-btn", { scale: 0, opacity: 0, duration: 2});
     
     gsap.to("#overlay", { 
         opacity: 0, 
@@ -241,3 +250,4 @@ togglePassword.addEventListener('click', function () {
 
 // Run once on page load to initialize the original eye graphic
 lucide.createIcons();
+});

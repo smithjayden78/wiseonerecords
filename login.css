@@ -262,3 +262,97 @@ body, .login-body {
 .input-group input[type="text"] {
     padding-right: 45px !important;
 }
+/* ==========================================================================
+   CINEMATIC INTRO SCREEN STYLING
+   ========================================================================== */
+.intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    z-index: 10000; /* Stays firmly on top of everything else */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.intro-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 1. Logo scale up and punch past camera viewport */
+#intro-logo {
+    width: 180px; /* Adjust to match your regular logo scale */
+    height: auto;
+    animation: logoZoomSequence 3.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+/* 2. Welcome phrase fading up into view */
+.intro-title {
+    position: absolute;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2.2rem;
+    color: #00ffff; /* Signature cyan layout glow */
+    letter-spacing: 4px;
+    font-weight: bold;
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+    opacity: 0;
+    white-space: nowrap;
+    /* Changed duration from 2s to 2.5s, and increased the start delay slightly to 1.5s */
+    animation: titleFadeInSequence 2.5s ease-in-out 1.5s forwards;
+}
+
+/* ==========================================================================
+   ANIMATION KEYFRAME TIMELINES
+   ========================================================================== */
+@keyframes logoZoomSequence {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    15% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    55% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(45); /* Dramatic hyper-zoom into the element */
+        opacity: 0;
+    }
+}
+
+@keyframes titleFadeInSequence {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.8));
+    }
+    /* The text will now hold perfectly still at full opacity from 20% all the way to 85% */
+    85% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.8));
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+}

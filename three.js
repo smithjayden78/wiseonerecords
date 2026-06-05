@@ -72,8 +72,8 @@ function animate() {
     stars.rotation.x += 0.0005;
 
     // Smooth Parallax movement
-    camera.position.x += (targetX - camera.position.x) * 0.02;
-    camera.position.y += (-targetY - camera.position.y) * 0.02;
+    camera.position.x += (targetX - camera.position.x) * 0.08;
+    camera.position.y += (-targetY - camera.position.y) * 0.08;
     camera.lookAt(scene.position);
 
     renderer.render(scene, camera);

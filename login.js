@@ -1,4 +1,24 @@
 /* ==========================================================================
+   VISIT LOGO INTRO ANIMATION CONTROLLER (ALWAYS RUN ON LOAD)
+   ========================================================================== */
+document.addEventListener("DOMContentLoaded", function() {
+    const introOverlay = document.getElementById('intro-overlay');
+    
+    if (introOverlay) {
+        // Let the 4-second animation play out completely
+        setTimeout(() => {
+            // Smoothly fade out the entire black overlay card
+            introOverlay.style.transition = "opacity 0.6s cubic-bezier(0.4, 0, 1, 1)";
+            introOverlay.style.opacity = "0";
+            
+            // Clean up the DOM completely after the fade concludes so it doesn't block mouse clicks
+            setTimeout(() => {
+                introOverlay.remove();
+            }, 600);
+        }, 4000); // 4000ms perfectly aligns with your CSS keyframe timelines
+    }
+});
+/* ==========================================================================
    1. FIREBASE ES MODULE IMPORTS (UPDATED TO INCLUDE FIRESTORE)
    ========================================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
