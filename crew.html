@@ -120,17 +120,39 @@
             </div>
         </footer>
         <script>
-                function updateBio(name, role, desc) {
-                    document.getElementById('bio-name').innerText = name;
-                    document.getElementById('bio-role').innerText = role;
-                    document.getElementById('bio-desc').innerText = desc;
-                    
-                    // GSAP pop effect when text changes
-                    gsap.fromTo("#bio-box", { scale: 0.98, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.2 });
-                }
-        </script>
+    function selectPlayer(cardElement, name, role, desc) {
+        // 1. Update the display panel fields safely
+        const bioName = document.getElementById('bio-name');
+        const bioRole = document.getElementById('bio-role');
+        const bioDesc = document.getElementById('bio-desc');
+
+        if (bioName) bioName.innerText = name;
+        if (bioRole) bioRole.innerText = role;
+        if (bioDesc) bioDesc.innerText = desc;
+        
+        // 2. Remove the 'active-selection' flash state from all other roster cards
+        document.querySelectorAll('.player-card').forEach(card => {
+            card.classList.remove('active-selection');
+            gsap.to(card, { scale: 1, y: 0, duration: 0.2 });
+        });
+
+        // 3. Mark this custom frame card as active
+        cardElement.classList.add('active-selection');
+
+        // 4. Run a retro arcade layout pop animation with GSAP
+        if (typeof gsap !== 'undefined') {
+            // Subtle lift and scale highlight on the active card
+            gsap.to(cardElement, { scale: 1.05, y: -5, duration: 0.2 });
+            
+            // Matrix panel refresh effect on the text information screen
+            gsap.fromTo("#bio-box", 
+                { scale: 0.96, opacity: 0.7, filter: "brightness(1.5)" }, 
+                { scale: 1, opacity: 1, filter: "brightness(1)", duration: 0.25 }
+            );
+        }
+    }
+</script>
         <script src="songController.js"></script>
         <script src="three.js"></script>
-
         </body>
     </html>

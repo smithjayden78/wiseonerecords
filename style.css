@@ -566,6 +566,19 @@ canvas {
 
 .bio-display h2 { color: var(--neon-pink); margin: 0; text-transform: uppercase; }
 .role-text { font-size: 0.7rem; letter-spacing: 1px; opacity: 0.8; }
+/* ==========================================================================
+   ROSTER ACTIVE SELECTION FX 🕹️
+   ========================================================================== */
+.player-card.active-selection {
+    box-shadow: 0 0 25px #ffffff, 
+                inset 0 0 15px rgba(255, 255, 255, 0.5) !important;
+    animation: neonPulse 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes neonPulse {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.3); }
+}
 
 /* Roster Grid */
 .roster-grid {
