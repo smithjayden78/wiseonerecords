@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function(){
     let trackIndex = 0; // Added explicit tracker baseline memory placeholder
 
     const playlist = [
+        { title: "Addy", file: "Bangers/addy.mpeg", image: "Covers/party.jpeg"},
+        { title: "House and Ideas", file: "Bangers/House and Ideas.mpeg", image: "Covers/wise ones.png"},
         { title: "HeartBreaker", file: "Bangers/Heartbreaker.mp4", image: "Covers/wise ones.png"},
         { title: "Extraordinary", file: "Bangers/Extraordinary.mp4", image:"Covers/party.jpeg" }, 
         { title: "Better Than Wine", file: "Bangers/Better than wine.mp4", image: "Covers/wise ones.png"},
@@ -31,15 +33,12 @@ document.addEventListener("DOMContentLoaded", function(){
         { title: "Welcome to the Party", file: "Bangers/Welcome to the Party.mp4", image: "Covers/wise ones.png" },
         { title: "Never leave ya", file: "Bangers/Never leave ya.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
         { title: "Washa", file: "Bangers/Washa.mp4", image: "Covers/wise ones.png"},
-        { title: "Jamka", file: "Bangers/Jamka.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
+        { title: "Jamka", file: "Bangers/Jamka.mp4", image: "Covers/Jamacia.png"},
         { title: "SpaceJam", file: "Bangers/SpaceJam.mp4", image: "Covers/wise ones.png"},
         { title: "Your Body", file: "Bangers/Your Body.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
         { title: "Gypsy", file: "Bangers/Gypsy.mp4", image: "Covers/Welcome to the Party Cover.jpeg"},
     ];
 
-    // ==========================================================================
-    // DYNAMIC QUEUE ENGINE
-    // ==========================================================================
     let playbackQueue = []; 
 
     function loadTrackFromQueue() {
@@ -156,9 +155,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
 
-    // ==========================================================================
-    // COMPONENT INTERFACE RENDERING ENGINE
-    // ==========================================================================
     function renderPlaylist() {
         if (!playlistElement) return;
         playlistElement.innerHTML = "";
@@ -275,9 +271,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     });
 
-    // ==========================================================================
-    // CORE DEVICE COMPONENT EVENT ATTACHMENTS
-    // ==========================================================================
     if (audio) {
         audio.onended = () => { nextTrack(); };
 
@@ -379,9 +372,6 @@ document.addEventListener("DOMContentLoaded", function(){
             });
         });
     }
-    // ==========================================================================
-    // CREW ROSTER / PROFILE INTERACTION ENGINE (For crew.html)
-    // ==========================================================================
     
     // 1. Grab all character fighter cards on the page
     const crewCards = document.querySelectorAll('.crew-card'); // Or whatever class your character items use
@@ -423,4 +413,4 @@ document.addEventListener("DOMContentLoaded", function(){
             };
         });
     }
-}); // <--- THIS is where DOMContentLoaded now correctly and safely closes!
+}); 
