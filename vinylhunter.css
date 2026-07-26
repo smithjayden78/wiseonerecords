@@ -23,7 +23,7 @@
 
 /* HUD STYLING & POSITIONING */
 .hud {
-    position: static !important; /* Strips absolute/fixed positioning completely */
+    position: static !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
@@ -49,7 +49,13 @@
     text-shadow: 0 0 8px #ffe600 !important;
 }
 
-/* CANVAS STYLING */
+/* CANVAS STYLING & CONTAINER */
+.canvas-container {
+    position: relative !important;
+    width: 560px !important;
+    height: 560px !important;
+}
+
 #gameCanvas {
     position: static !important;
     width: 560px !important;
@@ -60,38 +66,32 @@
     display: block !important;
     box-sizing: border-box !important;
 }
-/* CONTAINER FOR CANVAS & OVERLAYS */
-.canvas-container {
-    position: relative;
-    width: 560px;
-    height: 560px;
-}
 
 /* OVERLAY BACKDROP (Sits directly over canvas) */
 .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 560px;
-    height: 560px;
-    background: rgba(5, 5, 16, 0.92);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    box-sizing: border-box;
-    border: 3px solid var(--neon-pink, #ff007f);
-    border-radius: 4px;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 560px !important;
+    height: 560px !important;
+    background: rgba(5, 5, 16, 0.92) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 10 !important;
+    box-sizing: border-box !important;
+    border: 3px solid var(--neon-pink, #ff007f) !important;
+    border-radius: 4px !important;
 }
 
-/* MODAL BOX */
+/* MODAL CARD */
 .modal-card {
     background: #0d0d1a;
     border: 2px solid #00f0ff;
     box-shadow: 0 0 15px #00f0ff;
     padding: 24px 30px;
     border-radius: 8px;
-    width: 80%;
+    width: 85%;
     text-align: center;
     box-sizing: border-box;
 }
@@ -101,6 +101,7 @@
     margin-top: 0;
     font-size: 1.5rem;
     text-shadow: 0 0 8px #00f0ff;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .instructions {
@@ -110,17 +111,27 @@
     text-align: left;
     font-size: 0.95rem;
     line-height: 1.8;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .instructions li {
     margin-bottom: 8px;
 }
 
-/* START BUTTON */
+/* MODAL BUTTON CONTAINER */
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+/* NEON BUTTONS */
 .neon-btn {
     padding: 10px 20px;
-    font-size: 1.1rem;
-    font-family: inherit;
+    font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     color: #ffe600;
     background: #000;
@@ -136,15 +147,48 @@
     box-shadow: 0 0 20px #ffe600;
 }
 
+/* EXIT BUTTON VARIANT */
+.exit-btn {
+    color: #ff007f;
+    border-color: #ff007f;
+    box-shadow: 0 0 10px #ff007f;
+}
+
+.exit-btn:hover {
+    background: #ff007f;
+    color: #fff;
+    box-shadow: 0 0 20px #ff007f;
+}
+
+/* HUD PAUSE BUTTON */
+.hud-btn {
+    background: transparent;
+    border: 1px solid #ffe600;
+    color: #ffe600;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.hud-btn:hover {
+    background: #ffe600;
+    color: #000;
+}
+
 /* COUNTDOWN DISPLAY */
 #countdownText {
     font-size: 110px;
     font-weight: bold;
     color: #ff007f;
     text-shadow: 0 0 25px #ff007f;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-/* HIDE CLASS */
+/* HIDE UTILITY */
 .hidden {
     display: none !important;
 }

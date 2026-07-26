@@ -16,6 +16,7 @@
             <!-- HUD Header -->
             <div class="hud">
                 <div>SCORE: <span id="score">0</span></div>
+                <button id="pauseBtn" class="hud-btn">PAUSE</button>
                 <div>LIVES: <span id="lives">❤️❤️❤️</span></div>
             </div>
             
@@ -23,17 +24,21 @@
             <div class="canvas-container">
                 <canvas id="gameCanvas" width="560" height="560"></canvas>
 
-                <!-- Instructions Modal Overlay -->
+                <!-- Instructions / Pause Modal Overlay -->
                 <div id="instructionModal" class="overlay">
                     <div class="modal-card">
-                        <h2>HOW TO PLAY</h2>
+                        <h2 id="modalTitle">HOW TO PLAY</h2>
                         <ul class="instructions">
                             <li>🕹️ <b>Arrow Keys</b> to navigate the maze.</li>
                             <li>🎵 Collect <b>Pink Vinyls</b> (+10 pts) and <b>Gold Records</b> (+50 pts).</li>
                             <li>⚡ Speed increases as your score grows!</li>
                             <li>👾 Avoid the music critics or lose a life.</li>
                         </ul>
-                        <button id="startGameBtn" class="neon-btn">START GAME</button>
+                        
+                        <div class="modal-buttons">
+                            <button id="startGameBtn" class="neon-btn">START GAME</button>
+                            <button id="exitGameBtn" class="neon-btn exit-btn hidden">EXIT GAME</button>
+                        </div>
                     </div>
                 </div>
 

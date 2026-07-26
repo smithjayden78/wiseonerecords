@@ -5,7 +5,8 @@ const TILE_SIZE = 40;
 const ROWS = 14;
 const COLS = 14;
 
-const maze = [
+// Initial Maze layout template
+const initialMaze = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,1,1,0,0,0,0,0,1],
     [1,0,1,1,0,0,1,1,0,0,1,1,0,1],
@@ -22,14 +23,20 @@ const maze = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
+let maze = JSON.parse(JSON.stringify(initialMaze));
+
 let score = 0;
 let lives = 3;
 let gameOver = false;
-let gameStarted = false; // Freeze gameplay until countdown finishes
+let gameStarted = false;
+let isPaused = false;
 
 // DOM Elements
+const pauseBtn = document.getElementById("pauseBtn");
 const startGameBtn = document.getElementById("startGameBtn");
+const exitGameBtn = document.getElementById("exitGameBtn");
 const instructionModal = document.getElementById("instructionModal");
+const modalTitle = document.getElementById("modalTitle");
 const countdownOverlay = document.getElementById("countdownOverlay");
 const countdownText = document.getElementById("countdownText");
 
@@ -54,24 +61,47 @@ const enemies = [
     { startX: 6 * TILE_SIZE, startY: 6 * TILE_SIZE, x: 6 * TILE_SIZE, y: 6 * TILE_SIZE, dirX: 0, dirY: -1, label: '📻', speed: 2 }
 ];
 
-// Start Game Handler & Countdown
+// Pause Button Trigger
+pauseBtn.addEventListener("click", () => {
+    if (!gameStarted || gameOver) return;
+
+    isPaused = true;
+    modalTitle.innerText = "GAME PAUSED";
+    startGameBtn.innerText = "RESUME GAME";
+    exitGameBtn.classList.remove("hidden");
+    instructionModal.classList.remove("hidden");
+});
+
+// Start / Resume Button Trigger
 startGameBtn.addEventListener("click", () => {
     instructionModal.classList.add("hidden");
-    countdownOverlay.classList.remove("hidden");
-    
-    let count = 3;
-    countdownText.innerText = count;
 
-    const interval = setInterval(() => {
-        count--;
-        if (count > 0) {
-            countdownText.innerText = count;
-        } else {
-            clearInterval(interval);
-            countdownOverlay.classList.add("hidden");
-            gameStarted = true; // Unfreeze movement
-        }
-    }, 1000);
+    if (isPaused) {
+        // Resume directly without full countdown
+        isPaused = false;
+    } else {
+        // New Game Countdown
+        countdownOverlay.classList.remove("hidden");
+        let count = 3;
+        countdownText.innerText = count;
+
+        const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownText.innerText = count;
+            } else {
+                clearInterval(interval);
+                countdownOverlay.classList.add("hidden");
+                gameStarted = true;
+            }
+        }, 1000);
+    }
+});
+
+// Exit Game Button Trigger
+exitGameBtn.addEventListener("click", () => {
+    // Redirect back to the Arcade Room main page
+    window.location.href = "arcade.html"; 
 });
 
 // Controls
@@ -82,6 +112,11 @@ window.addEventListener("keydown", (e) => {
 
     if (gameOver && e.key === " ") {
         restartGame();
+        return;
+    }
+
+    if (e.key === "p" || e.key === "P") {
+        pauseBtn.click();
         return;
     }
 
@@ -136,6 +171,7 @@ function resetPositions() {
 }
 
 function restartGame() {
+    maze = JSON.parse(JSON.stringify(initialMaze));
     score = 0;
     lives = 3;
     gameOver = false;
@@ -301,8 +337,8 @@ function drawGameOver() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Only update movement if game officially started and not over
-    if (gameStarted && !gameOver) {
+    // Only update positions if game is actively running and not paused/over
+    if (gameStarted && !isPaused && !gameOver) {
         movePlayer();
         moveEnemies();
     }
