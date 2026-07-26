@@ -5,14 +5,12 @@ const TILE_SIZE = 40;
 const ROWS = 14;
 const COLS = 14;
 
-// 1 = Wall, 0 = Vinyl Record, 2 = Gold Record, 3 = Empty/Open Way
-// Note: Rows 4 and 5 updated to open up the center spawn box top door
 const maze = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,1,1,0,0,0,0,0,1],
     [1,0,1,1,0,0,1,1,0,0,1,1,0,1],
     [1,2,1,1,0,0,0,0,0,0,1,1,2,1],
-    [1,0,0,0,0,3,3,3,3,0,0,0,0,1], // Opened door above ghost house
+    [1,0,0,0,0,3,3,3,3,0,0,0,0,1],
     [1,0,1,1,0,1,3,3,1,0,1,1,0,1],
     [1,0,0,0,0,1,3,3,1,0,0,0,0,1],
     [1,0,1,1,0,1,1,1,1,0,1,1,0,1],
@@ -27,6 +25,13 @@ const maze = [
 let score = 0;
 let lives = 3;
 let gameOver = false;
+let gameStarted = false; // Freeze gameplay until countdown finishes
+
+// DOM Elements
+const startGameBtn = document.getElementById("startGameBtn");
+const instructionModal = document.getElementById("instructionModal");
+const countdownOverlay = document.getElementById("countdownOverlay");
+const countdownText = document.getElementById("countdownText");
 
 // Player Setup
 const player = {
@@ -48,6 +53,26 @@ const enemies = [
     { startX: 7 * TILE_SIZE, startY: 5 * TILE_SIZE, x: 7 * TILE_SIZE, y: 5 * TILE_SIZE, dirX: 0, dirY: -1, label: '💿', speed: 2 },
     { startX: 6 * TILE_SIZE, startY: 6 * TILE_SIZE, x: 6 * TILE_SIZE, y: 6 * TILE_SIZE, dirX: 0, dirY: -1, label: '📻', speed: 2 }
 ];
+
+// Start Game Handler & Countdown
+startGameBtn.addEventListener("click", () => {
+    instructionModal.classList.add("hidden");
+    countdownOverlay.classList.remove("hidden");
+    
+    let count = 3;
+    countdownText.innerText = count;
+
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownText.innerText = count;
+        } else {
+            clearInterval(interval);
+            countdownOverlay.classList.add("hidden");
+            gameStarted = true; // Unfreeze movement
+        }
+    }, 1000);
+});
 
 // Controls
 window.addEventListener("keydown", (e) => {
@@ -120,7 +145,6 @@ function restartGame() {
 }
 
 function movePlayer() {
-    // Collect points
     const centerGridX = Math.floor((player.x + TILE_SIZE / 2) / TILE_SIZE);
     const centerGridY = Math.floor((player.y + TILE_SIZE / 2) / TILE_SIZE);
 
@@ -138,7 +162,6 @@ function movePlayer() {
         }
     }
 
-    // Grid center turn check
     if (player.x % TILE_SIZE === 0 && player.y % TILE_SIZE === 0) {
         player.speed = player.targetSpeed;
 
@@ -158,7 +181,6 @@ function movePlayer() {
 function moveEnemies() {
     enemies.forEach(enemy => {
         if (enemy.x % TILE_SIZE === 0 && enemy.y % TILE_SIZE === 0) {
-            // Get valid paths
             let possibleDirs = [
                 { x: 0, y: -1 },
                 { x: 0, y: 1 },
@@ -166,7 +188,6 @@ function moveEnemies() {
                 { x: 1, y: 0 }
             ].filter(dir => canMove(enemy.x, enemy.y, dir.x, dir.y));
 
-            // Prevent enemy from turning 180 degrees backward unless stuck at a dead end
             if (possibleDirs.length > 1) {
                 possibleDirs = possibleDirs.filter(dir => !(dir.x === -enemy.dirX && dir.y === -enemy.dirY));
             }
@@ -177,14 +198,12 @@ function moveEnemies() {
                 const playerGridX = Math.round(player.x / TILE_SIZE);
                 const playerGridY = Math.round(player.y / TILE_SIZE);
 
-                // Target-focused path choice
                 possibleDirs.sort((a, b) => {
                     const distA = Math.hypot((currentGridX + a.x) - playerGridX, (currentGridY + a.y) - playerGridY);
                     const distB = Math.hypot((currentGridX + b.x) - playerGridX, (currentGridY + b.y) - playerGridY);
                     return distA - distB;
                 });
 
-                // 75% chance to follow best path toward player, 25% random direction
                 if (Math.random() < 0.75) {
                     enemy.dirX = possibleDirs[0].x;
                     enemy.dirY = possibleDirs[0].y;
@@ -199,7 +218,6 @@ function moveEnemies() {
         enemy.x += enemy.dirX * enemy.speed;
         enemy.y += enemy.dirY * enemy.speed;
 
-        // Collision Check with Player
         const dist = Math.hypot((enemy.x + TILE_SIZE / 2) - (player.x + TILE_SIZE / 2), (enemy.y + TILE_SIZE / 2) - (player.y + TILE_SIZE / 2));
         if (dist < TILE_SIZE / 1.5) {
             lives--;
@@ -221,16 +239,16 @@ function drawMaze() {
             const px = c * TILE_SIZE;
             const py = r * TILE_SIZE;
 
-            if (tile === 1) { // Wall
+            if (tile === 1) {
                 ctx.strokeStyle = "#00f0ff";
                 ctx.lineWidth = 2;
                 ctx.strokeRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
-            } else if (tile === 0) { // Vinyl
+            } else if (tile === 0) {
                 ctx.fillStyle = "#ff00ff";
                 ctx.beginPath();
                 ctx.arc(px + TILE_SIZE/2, py + TILE_SIZE/2, 4, 0, Math.PI * 2);
                 ctx.fill();
-            } else if (tile === 2) { // Gold Record
+            } else if (tile === 2) {
                 ctx.fillStyle = "#ffe600";
                 ctx.beginPath();
                 ctx.arc(px + TILE_SIZE/2, py + TILE_SIZE/2, 8, 0, Math.PI * 2);
@@ -283,16 +301,17 @@ function drawGameOver() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    if (!gameOver) {
+    // Only update movement if game officially started and not over
+    if (gameStarted && !gameOver) {
         movePlayer();
         moveEnemies();
-        drawMaze();
-        drawPlayer();
-        drawEnemies();
-    } else {
-        drawMaze();
-        drawPlayer();
-        drawEnemies();
+    }
+
+    drawMaze();
+    drawPlayer();
+    drawEnemies();
+
+    if (gameOver) {
         drawGameOver();
     }
 

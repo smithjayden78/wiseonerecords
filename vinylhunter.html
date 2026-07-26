@@ -13,12 +13,35 @@
     <div class="arcade-room">
         <div class="game-wrapper">
             
+            <!-- HUD Header -->
             <div class="hud">
                 <div>SCORE: <span id="score">0</span></div>
                 <div>LIVES: <span id="lives">❤️❤️❤️</span></div>
             </div>
             
-            <canvas id="gameCanvas" width="560" height="560"></canvas>
+            <!-- Canvas with Relative Container for Overlays -->
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="560" height="560"></canvas>
+
+                <!-- Instructions Modal Overlay -->
+                <div id="instructionModal" class="overlay">
+                    <div class="modal-card">
+                        <h2>HOW TO PLAY</h2>
+                        <ul class="instructions">
+                            <li>🕹️ <b>Arrow Keys</b> to navigate the maze.</li>
+                            <li>🎵 Collect <b>Pink Vinyls</b> (+10 pts) and <b>Gold Records</b> (+50 pts).</li>
+                            <li>⚡ Speed increases as your score grows!</li>
+                            <li>👾 Avoid the music critics or lose a life.</li>
+                        </ul>
+                        <button id="startGameBtn" class="neon-btn">START GAME</button>
+                    </div>
+                </div>
+
+                <!-- 3-Second Countdown Overlay -->
+                <div id="countdownOverlay" class="overlay hidden">
+                    <div id="countdownText">3</div>
+                </div>
+            </div>
 
         </div>
     </div>
