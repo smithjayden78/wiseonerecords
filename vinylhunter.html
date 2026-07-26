@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinyl Hunter | The Arcade</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="arcade.css">
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        #gameCanvas {
+            border: 3px solid var(--neon-pink, #ff007f);
+            box-shadow: 0 0 20px var(--neon-pink, #ff007f);
+            background-color: #050510;
+            display: block;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            width: 560px;
+            margin-bottom: 10px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: #ffe600;
+            text-shadow: 0 0 8px #ffe600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="arcade-room">
+        <div class="arcade-container">
+            <div class="hud">
+                <div>SCORE: <span id="score">0</span></div>
+                <div>LIVES: <span id="lives">❤️❤️❤️</span></div>
+            </div>
+            
+            <canvas id="gameCanvas" width="560" height="560"></canvas>
+        </div>
+    </div>
+
+    <script src="vinylhunter.js"></script>
+</body>
+</html>
