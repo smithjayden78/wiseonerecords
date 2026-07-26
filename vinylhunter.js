@@ -26,11 +26,12 @@ const maze = [
 let score = 0;
 let lives = 3;
 
-// Player Setup (Pixel-based positioning)
+// Player Setup
 const player = {
-    x: TILE_SIZE * 1, // Current exact X position in pixels
-    y: TILE_SIZE * 1, // Current exact Y position in pixels
-    speed: 3,         // Pixel movement speed per frame
+    x: TILE_SIZE * 1,
+    y: TILE_SIZE * 1,
+    speed: 2,         // Active movement speed
+    targetSpeed: 2,   // Speed to apply when reaching next tile intersection
     dirX: 0,
     dirY: 0,
     nextDirX: 0,
@@ -58,15 +59,9 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-function isCenteredOnTile(x, y) {
-    // Checks if player is aligned with the grid tile boundary
-    return (x % TILE_SIZE === 0) && (y % TILE_SIZE === 0);
-}
-
 function canMove(pixelX, pixelY, dirX, dirY) {
-    // Calculate target grid cell based on direction
-    const currentGridX = Math.floor(pixelX / TILE_SIZE);
-    const currentGridY = Math.floor(pixelY / TILE_SIZE);
+    const currentGridX = Math.round(pixelX / TILE_SIZE);
+    const currentGridY = Math.round(pixelY / TILE_SIZE);
     
     const targetGridX = currentGridX + dirX;
     const targetGridY = currentGridY + dirY;
@@ -74,34 +69,51 @@ function canMove(pixelX, pixelY, dirX, dirY) {
     return maze[targetGridY] && maze[targetGridY][targetGridX] !== 1;
 }
 
-function movePlayer() {
-    // 1. If centered on a grid tile, try turning in the buffered direction
-    if (isCenteredOnTile(player.x, player.y)) {
-        // Collect item on current tile
-        const gridX = player.x / TILE_SIZE;
-        const gridY = player.y / TILE_SIZE;
-        
-        if (maze[gridY][gridX] === 0) {
-            maze[gridY][gridX] = 3;
-            score += 10;
-        } else if (maze[gridY][gridX] === 2) {
-            maze[gridY][gridX] = 3;
-            score += 50;
-        }
-        document.getElementById("score").innerText = score;
+// Queue speed updates (using strict factors of 40: 2, 4, 8)
+function updateSpeed() {
+    if (score >= 600) {
+        player.targetSpeed = 8; // Max speed factor
+    } else if (score >= 250) {
+        player.targetSpeed = 4; // Mid speed factor
+    } else {
+        player.targetSpeed = 2; // Normal speed factor
+    }
+}
 
-        // Try changing direction
+function movePlayer() {
+    // 1. Collect points
+    const centerGridX = Math.floor((player.x + TILE_SIZE / 2) / TILE_SIZE);
+    const centerGridY = Math.floor((player.y + TILE_SIZE / 2) / TILE_SIZE);
+
+    if (maze[centerGridY] && maze[centerGridY][centerGridX] !== undefined) {
+        if (maze[centerGridY][centerGridX] === 0) {
+            maze[centerGridY][centerGridX] = 3;
+            score += 10;
+            document.getElementById("score").innerText = score;
+            updateSpeed();
+        } else if (maze[centerGridY][centerGridX] === 2) {
+            maze[centerGridY][centerGridX] = 3;
+            score += 50;
+            document.getElementById("score").innerText = score;
+            updateSpeed();
+        }
+    }
+
+    // 2. Safe Tile Intersection Check
+    if (player.x % TILE_SIZE === 0 && player.y % TILE_SIZE === 0) {
+        // Safely apply speed boost at tile center
+        player.speed = player.targetSpeed;
+
         if (canMove(player.x, player.y, player.nextDirX, player.nextDirY)) {
             player.dirX = player.nextDirX;
             player.dirY = player.nextDirY;
         } else if (!canMove(player.x, player.y, player.dirX, player.dirY)) {
-            // Stop if continuing ahead hits a wall
             player.dirX = 0;
             player.dirY = 0;
         }
     }
 
-    // 2. Smoothly increment pixel coordinates
+    // 3. Increment position
     player.x += player.dirX * player.speed;
     player.y += player.dirY * player.speed;
 }
@@ -151,7 +163,6 @@ function drawEnemies() {
     });
 }
 
-// 60 FPS Smooth Game Loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -163,5 +174,4 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Start smooth animation loop
 requestAnimationFrame(gameLoop);
