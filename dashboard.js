@@ -22,11 +22,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const currentHour = new Date().getHours();
             
             if (currentHour >= 5 && currentHour < 12) {
-                greetingString = `Rise and shine ${savedTag.toUpperCase()}, welcome to the party.`;
+                greetingString = `Rise and shine ${savedTag.toUpperCase()}. Welcome to the Party!`;
             } else if (currentHour >= 12 && currentHour < 17) {
-                greetingString = `Good afternoon ${savedTag.toUpperCase()}, stream online.`;
+                greetingString = `Good afternoon ${savedTag.toUpperCase()}. Welcome to the PARTY!`;
             } else {
-                greetingString = `Good evening ${savedTag.toUpperCase()}, WELCOME BACK TO THE PARTY !`;
+                greetingString = `Good evening ${savedTag.toUpperCase()}, WELCOME TO THE PARTY !`;
             }
         }
 
