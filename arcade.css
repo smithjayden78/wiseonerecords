@@ -51,7 +51,7 @@
 
     font-size:clamp(1rem,2vw,2rem);
 
-    color:var(--neon-pink);
+    color:var(--neon-blue);
 
     letter-spacing:.3vw;
 }
@@ -83,7 +83,7 @@
 
     padding:1.2vw;
 
-    border:3px solid var(--neon-blue);
+    border:3px solid var(--neon-pink);
 
     background:rgba(0,0,0,.45);
 
