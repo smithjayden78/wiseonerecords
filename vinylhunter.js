@@ -31,6 +31,15 @@ let gameOver = false;
 let gameStarted = false;
 let isPaused = false;
 
+// Array of guaranteed open floor tiles for enemy spawning (grid x, y)
+const enemySpawnPool = [
+    { x: 1, y: 1 },  { x: 12, y: 1 },
+    { x: 1, y: 12 }, { x: 12, y: 12 },
+    { x: 4, y: 1 },  { x: 9, y: 1 },
+    { x: 1, y: 8 },  { x: 12, y: 8 },
+    { x: 6, y: 5 },  { x: 7, y: 5 }
+];
+
 // DOM Elements
 const pauseBtn = document.getElementById("pauseBtn");
 const startGameBtn = document.getElementById("startGameBtn");
@@ -54,12 +63,26 @@ const player = {
     nextDirY: 0
 };
 
-// Enemy Setup
+// Base Enemy Templates
 const enemies = [
-    { startX: 6 * TILE_SIZE, startY: 5 * TILE_SIZE, x: 6 * TILE_SIZE, y: 5 * TILE_SIZE, dirX: 0, dirY: -1, label: '🎤', speed: 2 },
-    { startX: 7 * TILE_SIZE, startY: 5 * TILE_SIZE, x: 7 * TILE_SIZE, y: 5 * TILE_SIZE, dirX: 0, dirY: -1, label: '💿', speed: 2 },
-    { startX: 6 * TILE_SIZE, startY: 6 * TILE_SIZE, x: 6 * TILE_SIZE, y: 6 * TILE_SIZE, dirX: 0, dirY: -1, label: '📻', speed: 2 }
+    { x: 0, y: 0, dirX: 0, dirY: -1, label: '🎤', speed: 2 },
+    { x: 0, y: 0, dirX: 0, dirY: -1, label: '💿', speed: 2 },
+    { x: 0, y: 0, dirX: 0, dirY: -1, label: '📻', speed: 2 }
 ];
+
+// Assign random unique spawn locations from the pool
+function assignRandomEnemySpawns() {
+    // Shuffle copy of spawn pool
+    const shuffledPool = [...enemySpawnPool].sort(() => 0.5 - Math.random());
+
+    enemies.forEach((enemy, index) => {
+        const spawn = shuffledPool[index % shuffledPool.length];
+        enemy.x = spawn.x * TILE_SIZE;
+        enemy.y = spawn.y * TILE_SIZE;
+        enemy.dirX = 0;
+        enemy.dirY = -1;
+    });
+}
 
 // Pause Button Trigger
 pauseBtn.addEventListener("click", () => {
@@ -77,10 +100,8 @@ startGameBtn.addEventListener("click", () => {
     instructionModal.classList.add("hidden");
 
     if (isPaused) {
-        // Resume directly without full countdown
         isPaused = false;
     } else {
-        // New Game Countdown
         countdownOverlay.classList.remove("hidden");
         let count = 3;
         countdownText.innerText = count;
@@ -100,7 +121,6 @@ startGameBtn.addEventListener("click", () => {
 
 // Exit Game Button Trigger
 exitGameBtn.addEventListener("click", () => {
-    // Redirect back to the Arcade Room main page
     window.location.href = "arcade.html"; 
 });
 
@@ -162,12 +182,7 @@ function resetPositions() {
     player.nextDirX = 0;
     player.nextDirY = 0;
 
-    enemies.forEach(enemy => {
-        enemy.x = enemy.startX;
-        enemy.y = enemy.startY;
-        enemy.dirX = 0;
-        enemy.dirY = -1;
-    });
+    assignRandomEnemySpawns();
 }
 
 function restartGame() {
@@ -216,43 +231,53 @@ function movePlayer() {
 
 function moveEnemies() {
     enemies.forEach(enemy => {
-        if (enemy.x % TILE_SIZE === 0 && enemy.y % TILE_SIZE === 0) {
-            let possibleDirs = [
-                { x: 0, y: -1 },
-                { x: 0, y: 1 },
-                { x: -1, y: 0 },
-                { x: 1, y: 0 }
+        const isAlignedX = Math.abs(enemy.x % TILE_SIZE) < enemy.speed;
+        const isAlignedY = Math.abs(enemy.y % TILE_SIZE) < enemy.speed;
+
+        if (isAlignedX && isAlignedY) {
+            enemy.x = Math.round(enemy.x / TILE_SIZE) * TILE_SIZE;
+            enemy.y = Math.round(enemy.y / TILE_SIZE) * TILE_SIZE;
+
+            let allValidDirs = [
+                { x: 0, y: -1 }, { x: 0, y: 1 },
+                { x: -1, y: 0 }, { x: 1, y: 0 }
             ].filter(dir => canMove(enemy.x, enemy.y, dir.x, dir.y));
 
-            if (possibleDirs.length > 1) {
-                possibleDirs = possibleDirs.filter(dir => !(dir.x === -enemy.dirX && dir.y === -enemy.dirY));
-            }
+            let forwardDirs = allValidDirs.filter(dir => !(dir.x === -enemy.dirX && dir.y === -enemy.dirY));
+            let availableDirs = forwardDirs.length > 0 ? forwardDirs : allValidDirs;
 
-            if (possibleDirs.length > 0) {
+            if (availableDirs.length > 0) {
                 const currentGridX = enemy.x / TILE_SIZE;
                 const currentGridY = enemy.y / TILE_SIZE;
                 const playerGridX = Math.round(player.x / TILE_SIZE);
                 const playerGridY = Math.round(player.y / TILE_SIZE);
 
-                possibleDirs.sort((a, b) => {
+                availableDirs.sort((a, b) => {
                     const distA = Math.hypot((currentGridX + a.x) - playerGridX, (currentGridY + a.y) - playerGridY);
                     const distB = Math.hypot((currentGridX + b.x) - playerGridX, (currentGridY + b.y) - playerGridY);
                     return distA - distB;
                 });
 
-                if (Math.random() < 0.75) {
-                    enemy.dirX = possibleDirs[0].x;
-                    enemy.dirY = possibleDirs[0].y;
+                if (Math.random() < 0.75 && Math.random() > 0.10) {
+                    enemy.dirX = availableDirs[0].x;
+                    enemy.dirY = availableDirs[0].y;
                 } else {
-                    const randomDir = possibleDirs[Math.floor(Math.random() * possibleDirs.length)];
+                    const randomDir = availableDirs[Math.floor(Math.random() * availableDirs.length)];
                     enemy.dirX = randomDir.x;
                     enemy.dirY = randomDir.y;
                 }
             }
         }
 
-        enemy.x += enemy.dirX * enemy.speed;
-        enemy.y += enemy.dirY * enemy.speed;
+        if (canMove(enemy.x, enemy.y, enemy.dirX, enemy.dirY)) {
+            enemy.x += enemy.dirX * enemy.speed;
+            enemy.y += enemy.dirY * enemy.speed;
+        } else {
+            enemy.x = Math.round(enemy.x / TILE_SIZE) * TILE_SIZE;
+            enemy.y = Math.round(enemy.y / TILE_SIZE) * TILE_SIZE;
+            enemy.dirX = 0;
+            enemy.dirY = 0;
+        }
 
         const dist = Math.hypot((enemy.x + TILE_SIZE / 2) - (player.x + TILE_SIZE / 2), (enemy.y + TILE_SIZE / 2) - (player.y + TILE_SIZE / 2));
         if (dist < TILE_SIZE / 1.5) {
@@ -337,7 +362,6 @@ function drawGameOver() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Only update positions if game is actively running and not paused/over
     if (gameStarted && !isPaused && !gameOver) {
         movePlayer();
         moveEnemies();
@@ -354,4 +378,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// Initial Spawn Setup
+assignRandomEnemySpawns();
 requestAnimationFrame(gameLoop);
