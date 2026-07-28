@@ -31,6 +31,15 @@ let gameOver = false;
 let gameStarted = false;
 let isPaused = false;
 
+// Array of open floor tiles available for player spawning
+const playerSpawnPool = [
+    { x: 1, y: 1 },
+    { x: 12, y: 1 },
+    { x: 1, y: 12 },
+    { x: 12, y: 12 },
+    { x: 6, y: 12 }
+];
+
 // Array of guaranteed open floor tiles for enemy spawning (grid x, y)
 const enemySpawnPool = [
     { x: 1, y: 1 },  { x: 12, y: 1 },
@@ -70,6 +79,33 @@ const enemies = [
     { x: 0, y: 0, dirX: 0, dirY: -1, label: '📻', speed: 2 }
 ];
 
+// Randomize Spawns and ensure distance between player and enemies
+function randomizeAllSpawns() {
+    // 1. Pick a random player spawn location
+    const randomPlayerSpawn = playerSpawnPool[Math.floor(Math.random() * playerSpawnPool.length)];
+    player.x = randomPlayerSpawn.x * TILE_SIZE;
+    player.y = randomPlayerSpawn.y * TILE_SIZE;
+    player.dirX = 0;
+    player.dirY = 0;
+    player.nextDirX = 0;
+    player.nextDirY = 0;
+
+    // 2. Filter enemy spawn pool so enemies don't spawn on top of the player
+    const safeEnemyPool = enemySpawnPool.filter(
+        spot => !(spot.x === randomPlayerSpawn.x && spot.y === randomPlayerSpawn.y)
+    );
+
+    // Shuffle safe enemy pool
+    const shuffledEnemyPool = [...safeEnemyPool].sort(() => 0.5 - Math.random());
+
+    enemies.forEach((enemy, index) => {
+        const spawn = shuffledEnemyPool[index % shuffledEnemyPool.length];
+        enemy.x = spawn.x * TILE_SIZE;
+        enemy.y = spawn.y * TILE_SIZE;
+        enemy.dirX = 0;
+        enemy.dirY = -1;
+    });
+}
 // Assign random unique spawn locations from the pool
 function assignRandomEnemySpawns() {
     // Shuffle copy of spawn pool
@@ -175,14 +211,7 @@ function updateLivesUI() {
 }
 
 function resetPositions() {
-    player.x = player.startX;
-    player.y = player.startY;
-    player.dirX = 0;
-    player.dirY = 0;
-    player.nextDirX = 0;
-    player.nextDirY = 0;
-
-    assignRandomEnemySpawns();
+   randomizeAllSpawns();
 }
 
 function restartGame() {
@@ -379,5 +408,5 @@ function gameLoop() {
 }
 
 // Initial Spawn Setup
-assignRandomEnemySpawns();
+randomizeAllSpawns();
 requestAnimationFrame(gameLoop);
